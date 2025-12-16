@@ -10,5 +10,5 @@ public class Appointment{
     private String status;
 
 
-    
+    public Appointment () {}
 }
