@@ -3,7 +3,7 @@ package com.example.visitor.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
-@Entity
+
 public class Appointment {
    
     private Long id;
@@ -22,19 +22,15 @@ public class Appointment {
         this.purpose = purpose;
         this.status = "SCHEDULED";
     }
-
     
-  
-       
-
 
     public Long getId() { 
         return id;
     }
-    
-    public Visitor getVisitor() {}
-    
-     
+    public void setId(Long id){
+        this.id = id;
+    }
+    public Visitor getVisitor() {}     
         return visitor;
     }
     public void setVisitor(Visitor visitor) { 
