@@ -1,15 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ApiResponse;
-import com.example.demo.dto.VisitorDTO;
-import com.example.demo.entity.Visitor;
+import com.example.demo.model.Visitor;
 import com.example.demo.service.VisitorService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/visitors")
@@ -22,39 +17,28 @@ public class VisitorController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createVisitor(@RequestBody VisitorDTO dto) {
-
-        Visitor visitor = new Visitor();
-        visitor.setFullName(dto.getFullName());
-        visitor.setEmail(dto.getEmail());
-        visitor.setPhone(dto.getPhone());
-        visitor.setIdProofNumber(dto.getIdProofNumber());
-
-        Visitor saved = visitorService.createVisitor(visitor);
-
-        return new ResponseEntity<>(new ApiResponse(true, "Visitor created", toDto(saved)), HttpStatus.CREATED);
+    public Visitor createVisitor(@RequestBody Visitor visitor) {
+        return visitorService.createVisitor(visitor);
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse> getAll() {
-        List<VisitorDTO> list = visitorService.getAllVisitors()
-                .stream().map(this::toDto).collect(Collectors.toList());
-        return ResponseEntity.ok(new ApiResponse(true, "Visitors fetched", list));
+    public List<Visitor> getAllVisitors() {
+        return visitorService.getAllVisitors();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> getOne(@PathVariable Long id) {
-        Visitor visitor = visitorService.getVisitor(id);
-        return ResponseEntity.ok(new ApiResponse(true, "Visitor fetched", toDto(visitor)));
+    public Visitor getVisitorById(@PathVariable Long id) {
+        return visitorService.getVisitorById(id);
     }
 
-    private VisitorDTO toDto(Visitor v) {
-        VisitorDTO dto = new VisitorDTO();
-        dto.setId(v.getId());
-        dto.setFullName(v.getFullName());
-        dto.setEmail(v.getEmail());
-        dto.setPhone(v.getPhone());
-        dto.setIdProofNumber(v.getIdProofNumber());
-        return dto;
+    @PutMapping("/{id}")
+    public Visitor updateVisitor(@PathVariable Long id, @RequestBody Visitor visitor) {
+        return visitorService.updateVisitor(id, visitor);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteVisitor(@PathVariable Long id) {
+        visitorService.deleteVisitor(id);
+        return "Visitor deleted successfully";
     }
 }
