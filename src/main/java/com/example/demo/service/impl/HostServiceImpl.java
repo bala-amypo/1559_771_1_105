@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.Host;
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.Host;
 import com.example.demo.repository.HostRepository;
 import com.example.demo.service.HostService;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,8 +23,7 @@ public class HostServiceImpl implements HostService {
         try {
             return hostRepository.save(host);
         } catch (DataIntegrityViolationException ex) {
-            // Tests expect "constraint" in message
-            throw new DataIntegrityViolationException("constraint violation on host email", ex);
+            throw new IllegalArgumentException("constraint: " + ex.getMessage());
         }
     }
 
