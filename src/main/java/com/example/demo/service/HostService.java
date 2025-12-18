@@ -1,11 +1,10 @@
-package com.example.visitor.service;
-
+package com.example.demo.service;
+import com.example.demo.entity.Host;
 import java.util.List;
-import com.example.visitor.model.Host;
-import com.example.visitor.exception.NotFoundException;
 
 public interface HostService {
-    void createHost(Host host);
-    Host getHost(Long id) throws NotFoundException;
+    Host createHost(Host host);
+    Host getHost(Long id);
     List<Host> getAllHosts();
+    Host getHostByEmail(String email);
 }

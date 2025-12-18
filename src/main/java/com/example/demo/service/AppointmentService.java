@@ -1,12 +1,15 @@
-package com.example.visitor.service;
+package com.example.demo.service;
+
+import com.example.demo.entity.Appointment;
 
 import java.util.List;
-import com.example.visitor.model.Appointment;
-import com.example.visitor.exception.InvalidDateException;
 
 public interface AppointmentService {
-    void createAppointment(Long visitorId, Long hostId, Appointment appointment) throws InvalidDateException;
+
+    Appointment createAppointment(Long visitorId, Long hostId, Appointment appointment);
     Appointment getAppointment(Long id);
+
     List<Appointment> getAppointmentsForHost(Long hostId);
+
     List<Appointment> getAppointmentsForVisitor(Long visitorId);
 }

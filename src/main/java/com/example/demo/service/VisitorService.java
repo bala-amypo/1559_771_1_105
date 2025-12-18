@@ -1,11 +1,12 @@
-package com.example.visitor.service;
+package com.example.demo.service;
+
+import com.example.demo.entity.Visitor;
 
 import java.util.List;
-import com.example.visitor.model.Visitor;
-import com.example.visitor.exception.NotFoundException;
 
 public interface VisitorService {
-    void createVisitor(Visitor visitor);
-    Visitor getVisitor(Long id) throws NotFoundException;
+
+    Visitor createVisitor(Visitor visitor);
+    Visitor getVisitor(Long id);
     List<Visitor> getAllVisitors();
 }
