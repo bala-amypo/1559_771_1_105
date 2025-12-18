@@ -4,7 +4,6 @@ import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.AppointmentDTO;
 import com.example.demo.entity.Appointment;
 import com.example.demo.service.AppointmentService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/appointments")
-@Tag(name = "Appointments", description = "Appointment scheduling")
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
@@ -27,14 +25,14 @@ public class AppointmentController {
     public ResponseEntity<ApiResponse> create(@PathVariable Long visitorId,
                                               @PathVariable Long hostId,
                                               @RequestBody AppointmentDTO dto) {
+
         Appointment appointment = new Appointment();
         appointment.setAppointmentDate(dto.getAppointmentDate());
         appointment.setPurpose(dto.getPurpose());
 
         Appointment saved = appointmentService.createAppointment(visitorId, hostId, appointment);
-        AppointmentDTO responseDto = toDto(saved);
 
-        return new ResponseEntity<>(new ApiResponse(true, "Appointment created", responseDto),
+        return new ResponseEntity<>(new ApiResponse(true, "Appointment created", toDto(saved)),
                 HttpStatus.CREATED);
     }
 

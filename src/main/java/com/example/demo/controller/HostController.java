@@ -4,7 +4,6 @@ import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.HostDTO;
 import com.example.demo.entity.Host;
 import com.example.demo.service.HostService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/hosts")
-@Tag(name = "Hosts", description = "Host/Employee management")
 public class HostController {
 
     private final HostService hostService;
@@ -25,6 +23,7 @@ public class HostController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> createHost(@RequestBody HostDTO dto) {
+
         Host host = new Host();
         host.setHostName(dto.getHostName());
         host.setEmail(dto.getEmail());
@@ -32,17 +31,15 @@ public class HostController {
         host.setPhone(dto.getPhone());
 
         Host saved = hostService.createHost(host);
-        HostDTO responseDto = toDto(saved);
 
-        return new ResponseEntity<>(new ApiResponse(true, "Host created", responseDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ApiResponse(true, "Host created", toDto(saved)), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse> getAll() {
-        List<HostDTO> hosts = hostService.getAllHosts().stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(new ApiResponse(true, "Hosts fetched", hosts));
+        List<HostDTO> list = hostService.getAllHosts()
+                .stream().map(this::toDto).collect(Collectors.toList());
+        return ResponseEntity.ok(new ApiResponse(true, "Hosts fetched", list));
     }
 
     @GetMapping("/{id}")

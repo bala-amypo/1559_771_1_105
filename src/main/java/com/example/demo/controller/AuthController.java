@@ -6,7 +6,6 @@ import com.example.demo.dto.AuthResponse;
 import com.example.demo.entity.User;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Authentication", description = "User registration and login")
 public class AuthController {
 
     private final UserService userService;
@@ -34,22 +32,27 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> register(@RequestBody User user) {
         User saved = userService.registerUser(user);
-        return new ResponseEntity<>(
-                new ApiResponse(true, "User registered", saved),
-                HttpStatus.CREATED
-        );
+        return new ResponseEntity<>(new ApiResponse(true, "User registered", saved), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody AuthRequest request) {
+
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
         User user = userService.findByEmail(request.getEmail());
-        String token = jwtUtil.generateToken(user.getUsername(), user.getRole(), user.getId(), user.getEmail());
-        AuthResponse authResponse = new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
 
-        return ResponseEntity.ok(new ApiResponse(true, "Login successful", authResponse));
+        String token = jwtUtil.generateToken(
+                user.getUsername(),
+                user.getRole(),
+                user.getId(),
+                user.getEmail()
+        );
+
+        AuthResponse response = new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
+
+        return ResponseEntity.ok(new ApiResponse(true, "Login successful", response));
     }
 }

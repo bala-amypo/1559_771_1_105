@@ -4,7 +4,6 @@ import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.VisitorDTO;
 import com.example.demo.entity.Visitor;
 import com.example.demo.service.VisitorService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/visitors")
-@Tag(name = "Visitors", description = "Visitor management endpoints")
 public class VisitorController {
 
     private final VisitorService visitorService;
@@ -25,6 +23,7 @@ public class VisitorController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> createVisitor(@RequestBody VisitorDTO dto) {
+
         Visitor visitor = new Visitor();
         visitor.setFullName(dto.getFullName());
         visitor.setEmail(dto.getEmail());
@@ -32,17 +31,15 @@ public class VisitorController {
         visitor.setIdProofNumber(dto.getIdProofNumber());
 
         Visitor saved = visitorService.createVisitor(visitor);
-        VisitorDTO responseDto = toDto(saved);
 
-        return new ResponseEntity<>(new ApiResponse(true, "Visitor created", responseDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ApiResponse(true, "Visitor created", toDto(saved)), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse> getAll() {
-        List<VisitorDTO> visitors = visitorService.getAllVisitors().stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(new ApiResponse(true, "Visitors fetched", visitors));
+        List<VisitorDTO> list = visitorService.getAllVisitors()
+                .stream().map(this::toDto).collect(Collectors.toList());
+        return ResponseEntity.ok(new ApiResponse(true, "Visitors fetched", list));
     }
 
     @GetMapping("/{id}")
