@@ -3,8 +3,8 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "visitors")
@@ -14,42 +14,29 @@ public class Visitor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Full name is required")
+    @Column(nullable = false)
     private String fullName;
 
-    @Email
+    @Email(message = "Invalid email format")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Phone is required")
+    @Column(nullable = false)
     private String phone;
 
-    @NotBlank
+    @NotBlank(message = "ID proof number is required")
+    @Column(nullable = false)
     private String idProofNumber;
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "visitor")
-    private List<Appointment> appointments;
-
-    @OneToMany(mappedBy = "visitor")
-    private List<VisitLog> visitLogs;
-
-    public Visitor() {}
-
-    public Visitor(Long id, String fullName, String email, String phone, String idProofNumber) {
-        this.id = id;
-        this.fullName = fullName;
-        this.email = email;
-        this.phone = phone;
-        this.idProofNumber = idProofNumber;
-    }
-
     @PrePersist
-    public void prePersist() {
+    protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
+    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -67,10 +54,4 @@ public class Visitor {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    public List<Appointment> getAppointments() { return appointments; }
-    public void setAppointments(List<Appointment> appointments) { this.appointments = appointments; }
-
-    public List<VisitLog> getVisitLogs() { return visitLogs; }
-    public void setVisitLogs(List<VisitLog> visitLogs) { this.visitLogs = visitLogs; }
 }
