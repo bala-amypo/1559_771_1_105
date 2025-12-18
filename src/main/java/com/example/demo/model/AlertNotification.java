@@ -13,17 +13,24 @@ public class AlertNotification {
     private Long id;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "visit_log_id", unique = true)
+    @JoinColumn(name = "visit_log_id", nullable = false, unique = true)
     private VisitLog visitLog;
 
-    @NotBlank
+    @NotBlank(message = "Recipient is required")
+    @Column(nullable = false)
     private String sentTo;
 
-    @NotBlank
-    @Column(length = 2000)
+    @NotBlank(message = "Alert message is required")
+    @Column(nullable = false)
     private String alertMessage;
 
+    @Column(nullable = false)
     private LocalDateTime sentAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.sentAt = LocalDateTime.now();
+    }
 
     public AlertNotification() {}
 
@@ -32,11 +39,6 @@ public class AlertNotification {
         this.visitLog = visitLog;
         this.sentTo = sentTo;
         this.alertMessage = alertMessage;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        this.sentAt = LocalDateTime.now();
     }
 
     // Getters and Setters

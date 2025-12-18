@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
@@ -12,18 +13,21 @@ public class Appointment {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "visitor_id")
+    @JoinColumn(name = "visitor_id", nullable = false)
     private Visitor visitor;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "host_id")
+    @JoinColumn(name = "host_id", nullable = false)
     private Host host;
 
+    @NotNull(message = "Appointment date is required")
+    @Column(nullable = false)
     private LocalDate appointmentDate;
 
     private String purpose;
 
-    private String status;
+    @Column(nullable = false)
+    private String status = "SCHEDULED";
 
     public Appointment() {}
 

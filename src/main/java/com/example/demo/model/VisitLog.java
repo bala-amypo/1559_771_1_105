@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -13,23 +14,37 @@ public class VisitLog {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "visitor_id")
+    @JoinColumn(name = "visitor_id", nullable = false)
     private Visitor visitor;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "host_id")
+    @JoinColumn(name = "host_id", nullable = false)
     private Host host;
 
+    @Column(nullable = false)
     private LocalDateTime checkInTime;
 
     private LocalDateTime checkOutTime;
 
+    @NotBlank(message = "Purpose is required")
+    @Column(nullable = false)
     private String purpose;
 
-    @NotNull
+    @NotNull(message = "Access granted flag is required")
+    @Column(nullable = false)
     private Boolean accessGranted;
 
-    private Boolean alertSent;
+    @Column(nullable = false)
+    private Boolean alertSent = false;
+
+    @OneToOne(mappedBy = "visitLog", cascade = CascadeType.ALL)
+    private AlertNotification alertNotification;
+
+    @PrePersist
+    public void prePersist() {
+        this.checkInTime = LocalDateTime.now();
+        if (this.alertSent == null) this.alertSent = false;
+    }
 
     public VisitLog() {}
 
@@ -39,14 +54,6 @@ public class VisitLog {
         this.host = host;
         this.purpose = purpose;
         this.accessGranted = accessGranted;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        this.checkInTime = LocalDateTime.now();
-        if (this.alertSent == null) {
-            this.alertSent = false;
-        }
     }
 
     // Getters and Setters
@@ -73,4 +80,7 @@ public class VisitLog {
 
     public Boolean getAlertSent() { return alertSent; }
     public void setAlertSent(Boolean alertSent) { this.alertSent = alertSent; }
+
+    public AlertNotification getAlertNotification() { return alertNotification; }
+    public void setAlertNotification(AlertNotification alertNotification) { this.alertNotification = alertNotification; }
 }

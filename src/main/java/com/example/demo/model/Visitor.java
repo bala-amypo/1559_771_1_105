@@ -3,8 +3,9 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "visitors")
@@ -31,12 +32,29 @@ public class Visitor {
 
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "visitor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Appointment> appointments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "visitor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VisitLog> visitLogs = new ArrayList<>();
+
     @PrePersist
-    protected void onCreate() {
+    public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
 
-    // Getters & Setters
+    public Visitor() {}
+
+    public Visitor(Long id, String fullName, String email, String phone, String idProofNumber, LocalDateTime createdAt) {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.idProofNumber = idProofNumber;
+        this.createdAt = createdAt;
+    }
+
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -54,4 +72,10 @@ public class Visitor {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public List<Appointment> getAppointments() { return appointments; }
+    public void setAppointments(List<Appointment> appointments) { this.appointments = appointments; }
+
+    public List<VisitLog> getVisitLogs() { return visitLogs; }
+    public void setVisitLogs(List<VisitLog> visitLogs) { this.visitLogs = visitLogs; }
 }

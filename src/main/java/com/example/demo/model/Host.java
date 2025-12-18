@@ -4,40 +4,51 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "hosts", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email")
-})
+@Table(
+    name = "hosts",
+    uniqueConstraints = @UniqueConstraint(columnNames = "email")
+)
 public class Host {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Host name is required")
+    @Column(nullable = false)
     private String hostName;
 
     private String fullname;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Department is required")
+    @Column(nullable = false)
     private String department;
 
-    @NotBlank
+    @NotBlank(message = "Phone is required")
+    @Column(nullable = false)
     private String phone;
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "host")
-    private List<Appointment> appointments;
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Appointment> appointments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "host")
-    private List<VisitLog> visitLogs;
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VisitLog> visitLogs = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     public Host() {}
 
@@ -48,11 +59,6 @@ public class Host {
         this.email = email;
         this.department = department;
         this.phone = phone;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
     }
 
     // Getters and Setters
