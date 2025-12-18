@@ -1,82 +1,53 @@
-package com.example.demo.model;
+package com.example.demo.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Entity
+@Table(name = "hosts", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Host {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank
     private String hostName;
+
     private String fullname;
+
+    @NotBlank
+    @Email
     private String email;
+
+    @NotBlank
     private String department;
+
+    @NotBlank
     private String phone;
+
     private LocalDateTime createdAt;
 
-    public Host(){}
+    @OneToMany(mappedBy = "host")
+    private List<Appointment> appointments;
 
-    public Host(String hostName, String fullname, String email, String department, String phone,
-            LocalDateTime createdAt) {
-        this.hostName = hostName;
-        this.fullname = fullname;
-        this.email = email;
-        this.department = department;
-        this.phone = phone;
-        this.createdAt = createdAt;
-    }
+    @OneToMany(mappedBy = "host")
+    private List<VisitLog> visitLogs;
 
-    public void setId(Long id) {
-        this.id = id;
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
     }
-
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getHostName() {
-        return hostName;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    
 }

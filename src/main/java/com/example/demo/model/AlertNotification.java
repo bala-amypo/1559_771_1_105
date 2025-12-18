@@ -1,51 +1,39 @@
-package com.example.visitor.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
 import java.time.LocalDateTime;
 
-
+@Entity
+@Table(name = "alert_notifications")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AlertNotification {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne(optional = false)
+    @JoinColumn(name = "visit_log_id", unique = true)
     private VisitLog visitLog;
+
+    @NotBlank
     private String sentTo;
+
+    @NotBlank
+    @Column(length = 2000)
     private String alertMessage;
+
     private LocalDateTime sentAt;
 
-    public AlertNotification() {}
-
-    public AlertNotification(VisitLog visitLog, String sentTo, String alertMessage) {
-        this.visitLog = visitLog;
-        this.sentTo = sentTo;
-        this.alertMessage = alertMessage;
-    }
-
-   
-
-    public Long getId() { 
-        return id; 
-    }
-    public void setId() {
-        this.id = id;
-    }
-    public VisitLog getVisitLog() { 
-        return visitLog; 
-    }
-    public void setVisitLog(VisitLog visitLog) { 
-        this.visitLog = visitLog; 
-    }
-    public String getSentTo() { 
-        return sentTo; 
-    }
-    public void setSentTo(String sentTo) { 
-        this.sentTo = sentTo; 
-    }
-    public String getAlertMessage() { 
-        return alertMessage; 
-    }
-    public void setAlertMessage(String alertMessage) { 
-        this.alertMessage = alertMessage; 
-    }
-    public LocalDateTime getSentAt() { 
-        return sentAt; 
+    @PrePersist
+    public void prePersist() {
+        this.sentAt = LocalDateTime.now();
     }
 }

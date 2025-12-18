@@ -1,71 +1,48 @@
-package com.example.demo.model;
+package com.example.demo.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Entity
+@Table(name = "visitors")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Visitor {
-    private long id;
-    private String fullname;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
+    private String fullName;
+
+    @Email
     private String email;
+
+    @NotBlank
     private String phone;
+
+    @NotBlank
     private String idProofNumber;
+
     private LocalDateTime createdAt;
 
-    public Visitor(){}
+    @OneToMany(mappedBy = "visitor")
+    private List<Appointment> appointments;
 
-    public Visitor(String fullname, String email, String phone, String idProofNumber, LocalDateTime createdAt) {
-        this.fullname = fullname;
-        this.email = email;
-        this.phone = phone;
-        this.idProofNumber = idProofNumber;
-        this.createdAt = createdAt;
-    }
+    @OneToMany(mappedBy = "visitor")
+    private List<VisitLog> visitLogs;
 
-    public void setId(long id) {
-        this.id = id;
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
     }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setIdProofNumber(String idProofNumber) {
-        this.idProofNumber = idProofNumber;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getIdProofNumber() {
-        return idProofNumber;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    
 }
