@@ -1,5 +1,5 @@
 package com.example.demo.service;
-import com.example.demo.entity.Host;
+import com.example.demo.model.Host;
 import java.util.List;
 
 public interface HostService {
