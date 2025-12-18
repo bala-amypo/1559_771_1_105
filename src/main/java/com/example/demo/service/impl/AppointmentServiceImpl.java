@@ -1,9 +1,9 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Appointment;
 import com.example.demo.model.Host;
 import com.example.demo.model.Visitor;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AppointmentRepository;
 import com.example.demo.repository.HostRepository;
 import com.example.demo.repository.VisitorRepository;
@@ -30,19 +30,21 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Appointment createAppointment(Long visitorId, Long hostId, Appointment appointment) {
-        if (appointment.getAppointmentDate() != null &&
-                appointment.getAppointmentDate().isBefore(LocalDate.now())) {
+
+        if (appointment.getAppointmentDate().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("appointmentDate cannot be past");
         }
 
         Visitor visitor = visitorRepository.findById(visitorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Visitor not found"));
+
         Host host = hostRepository.findById(hostId)
                 .orElseThrow(() -> new ResourceNotFoundException("Host not found"));
 
         appointment.setVisitor(visitor);
         appointment.setHost(host);
-        if (appointment.getStatus() == null) {
+
+        if (appointment.getStatus() == null || appointment.getStatus().isBlank()) {
             appointment.setStatus("SCHEDULED");
         }
 

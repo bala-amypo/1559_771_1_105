@@ -1,8 +1,8 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.AlertNotification;
 import com.example.demo.model.VisitLog;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AlertNotificationRepository;
 import com.example.demo.repository.VisitLogRepository;
 import com.example.demo.service.AlertNotificationService;
@@ -24,25 +24,21 @@ public class AlertNotificationServiceImpl implements AlertNotificationService {
 
     @Override
     public AlertNotification sendAlert(Long visitLogId) {
-        visitLogRepository.findById(visitLogId)
-                .orElseThrow(() -> new ResourceNotFoundException("Visitor not found"));
-        if (alertRepository.findByVisitLogId(visitLogId).isPresent()) {
-            throw new IllegalArgumentException("Alert already sent");
-        }
 
-        VisitLog visitLog = visitLogRepository.findById(visitLogId)
-                .orElseThrow(() -> new ResourceNotFoundException("Visitor not found"));
+        VisitLog log = visitLogRepository.findById(visitLogId)
+                .orElseThrow(() -> new ResourceNotFoundException("Visit log not found"));
+
+        alertRepository.findByVisitLogId(visitLogId).ifPresent(a -> {
+            throw new IllegalArgumentException("Alert already sent");
+        });
 
         AlertNotification alert = new AlertNotification();
-        alert.setVisitLog(visitLog);
-        alert.setSentTo(visitLog.getHost().getEmail());
-        alert.setAlertMessage("Alert for visit log ID " + visitLogId);
+        alert.setVisitLog(log);
+        alert.setSentTo(log.getHost().getEmail());
+        alert.setAlertMessage("Visitor " + log.getVisitor().getFullName() +
+                " has checked in to meet " + log.getHost().getHostName());
 
-        AlertNotification saved = alertRepository.save(alert);
-        visitLog.setAlertSent(true);
-        visitLogRepository.save(visitLog);
-
-        return saved;
+        return alertRepository.save(alert);
     }
 
     @Override
