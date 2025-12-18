@@ -1,9 +1,9 @@
 package com.example.demo.exception;
 
 import com.example.demo.dto.ApiResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,38 +15,43 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> handleResourceNotFound(ResourceNotFoundException ex) {
+    public ResponseEntity<ApiResponse> handleNotFound(ResourceNotFoundException ex) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex) {
+    public ResponseEntity<ApiResponse> handleIllegalArgument(IllegalArgumentException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<?> handleIllegalState(IllegalStateException ex) {
+    public ResponseEntity<ApiResponse> handleIllegalState(IllegalStateException ex) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> handleConstraint(DataIntegrityViolationException ex) {
-        // for tests: expect "constraint" in error message for duplicate host email etc.
+    public ResponseEntity<ApiResponse> handleConstraint(DataIntegrityViolationException ex) {
+
+        // Tests expect the word "constraint" in the message
         String message = ex.getMessage() != null && ex.getMessage().toLowerCase().contains("constraint")
                 ? ex.getMessage()
                 : "Database constraint violation";
+
         return buildResponse(HttpStatus.BAD_REQUEST, message);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGeneric(Exception ex) {
+    public ResponseEntity<ApiResponse> handleGeneric(Exception ex) {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
     }
 
     private ResponseEntity<ApiResponse> buildResponse(HttpStatus status, String message) {
+
         Map<String, Object> data = new HashMap<>();
         data.put("timestamp", LocalDateTime.now());
+
         ApiResponse response = new ApiResponse(false, message, data);
+
         return new ResponseEntity<>(response, status);
     }
 }

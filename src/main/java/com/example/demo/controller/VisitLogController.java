@@ -4,7 +4,6 @@ import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.VisitLogDTO;
 import com.example.demo.entity.VisitLog;
 import com.example.demo.service.VisitLogService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/visits")
-@Tag(name = "Visit Logs", description = "Check-in and check-out operations")
 public class VisitLogController {
 
     private final VisitLogService visitLogService;
@@ -27,7 +25,9 @@ public class VisitLogController {
     public ResponseEntity<ApiResponse> checkIn(@PathVariable Long visitorId,
                                                @PathVariable Long hostId,
                                                @RequestBody String purpose) {
+
         VisitLog log = visitLogService.checkInVisitor(visitorId, hostId, purpose);
+
         return new ResponseEntity<>(new ApiResponse(true, "Visitor checked in", toDto(log)),
                 HttpStatus.CREATED);
     }
