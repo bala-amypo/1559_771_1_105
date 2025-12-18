@@ -1,25 +1,62 @@
-// package com.example.demo.dto;
+package com.example.demo.dto;
 
-// public class ApiResponse {
+import java.time.LocalDateTime;
 
-//     private Boolean success;
-//     private String message;
-//     private Object data;
+public class ApiResponse {
 
-//     public ApiResponse() {}
+    private boolean success;
+    private String message;
+    private Object data;
+    private LocalDateTime timestamp;
 
-//     public ApiResponse(Boolean success, String message, Object data) {
-//         this.success = success;
-//         this.message = message;
-//         this.data = data;
-//     }
+    public ApiResponse() {
+        this.timestamp = LocalDateTime.now();
+    }
 
-//     public Boolean getSuccess() { return success; }
-//     public void setSuccess(Boolean success) { this.success = success; }
+    public ApiResponse(boolean success, String message) {
+        this.success = success;
+        this.message = message;
+        this.timestamp = LocalDateTime.now();
+    }
 
-//     public String getMessage() { return message; }
-//     public void setMessage(String message) { this.message = message; }
+    public ApiResponse(boolean success, String message, Object data) {
+        this.success = success;
+        this.message = message;
+        this.data = data;
+        this.timestamp = LocalDateTime.now();
+    }
 
-//     public Object getData() { return data; }
-//     public void setData(Object data) { this.data = data; }
-// }
+    // Getters and Setters
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+}
