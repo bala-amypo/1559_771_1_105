@@ -1,12 +1,12 @@
-package com.example.visitor.service;
+package com.example.demo.service;
+
+import com.example.demo.entity.VisitLog;
 
 import java.util.List;
-import com.example.visitor.model.VisitLog;
-import com.example.visitor.exception.InvalidStateException;
 
 public interface VisitLogService {
-    void checkInVisitor(Long visitorId, Long hostId, String purpose);
-    void checkOutVisitor(Long visitLogId) throws InvalidStateException;
+    VisitLog checkInVisitor(Long visitorId, Long hostId, String purpose);
+    VisitLog checkOutVisitor(Long visitLogId);
     List<VisitLog> getActiveVisits();
     VisitLog getVisitLog(Long id);
 }

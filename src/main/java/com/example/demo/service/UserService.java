@@ -1,10 +1,9 @@
-package com.example.visitor.service;
+package com.example.demo.service;
 
-import com.example.visitor.model.request.RegisterRequest;
-import com.example.visitor.model.request.AuthRequest;
-import com.example.visitor.model.response.AuthResponse;
+import com.example.demo.entity.User;
 
 public interface UserService {
-    AuthResponse register(RegisterRequest request);
-    AuthResponse login(AuthRequest request);
+    User registerUser(User user);
+    User findByEmail(String email);
+    User findById(Long id);
 }

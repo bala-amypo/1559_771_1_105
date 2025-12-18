@@ -1,11 +1,11 @@
-package com.example.visitor.service;
+package com.example.demo.service;
+
+import com.example.demo.entity.AlertNotification;
 
 import java.util.List;
-import com.example.visitor.model.Alert;
-import com.example.visitor.exception.DuplicateAlertException;
 
 public interface AlertNotificationService {
-    void sendAlert(Long visitLogId) throws DuplicateAlertException;
-    Alert getAlert(Long id);
-    List<Alert> getAllAlerts();
+    AlertNotification sendAlert(Long visitLogId);
+    AlertNotification getAlert(Long id);
+    List<AlertNotification> getAllAlerts();
 }
