@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.AppointmentDTO;
-import com.example.demo.entity.Appointment;
+import com.example.demo.model.Appointment;
 import com.example.demo.service.AppointmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

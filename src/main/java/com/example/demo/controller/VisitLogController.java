@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.VisitLogDTO;
-import com.example.demo.entity.VisitLog;
+import com.example.demo.model.VisitLog;
 import com.example.demo.service.VisitLogService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
