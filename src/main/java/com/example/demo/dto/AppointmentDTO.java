@@ -11,7 +11,8 @@ public class AppointmentDTO {
     private String purpose;
     private String status;
 
-    public AppointmentDTO() {}
+    public AppointmentDTO() {
+    }
 
     public AppointmentDTO(Long id, Long visitorId, Long hostId, LocalDate appointmentDate, String purpose, String status) {
         this.id = id;

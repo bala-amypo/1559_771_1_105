@@ -8,7 +8,8 @@ public class VisitorDTO {
     private String phone;
     private String idProofNumber;
 
-    public VisitorDTO() {}
+    public VisitorDTO() {
+    }
 
     public VisitorDTO(Long id, String fullName, String email, String phone, String idProofNumber) {
         this.id = id;
@@ -18,7 +19,6 @@ public class VisitorDTO {
         this.idProofNumber = idProofNumber;
     }
 
-    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

@@ -8,7 +8,8 @@ public class HostDTO {
     private String department;
     private String phone;
 
-    public HostDTO() {}
+    public HostDTO() {
+    }
 
     public HostDTO(Long id, String hostName, String email, String department, String phone) {
         this.id = id;
