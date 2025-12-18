@@ -1,17 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "appointments")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Appointment {
 
     @Id
@@ -30,5 +23,35 @@ public class Appointment {
 
     private String purpose;
 
-    private String status; // SCHEDULED, CANCELLED, COMPLETED
+    private String status;
+
+    public Appointment() {}
+
+    public Appointment(Long id, Visitor visitor, Host host, LocalDate appointmentDate, String purpose, String status) {
+        this.id = id;
+        this.visitor = visitor;
+        this.host = host;
+        this.appointmentDate = appointmentDate;
+        this.purpose = purpose;
+        this.status = status;
+    }
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Visitor getVisitor() { return visitor; }
+    public void setVisitor(Visitor visitor) { this.visitor = visitor; }
+
+    public Host getHost() { return host; }
+    public void setHost(Host host) { this.host = host; }
+
+    public LocalDate getAppointmentDate() { return appointmentDate; }
+    public void setAppointmentDate(LocalDate appointmentDate) { this.appointmentDate = appointmentDate; }
+
+    public String getPurpose() { return purpose; }
+    public void setPurpose(String purpose) { this.purpose = purpose; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }
