@@ -20,6 +20,7 @@ public class VisitLogServiceImpl implements VisitLogService {
     private final VisitorRepository visitorRepository;
     private final HostRepository hostRepository;
 
+    // ✅ Constructor used by Spring
     public VisitLogServiceImpl(VisitLogRepository visitLogRepository,
                                VisitorRepository visitorRepository,
                                HostRepository hostRepository) {
@@ -28,8 +29,18 @@ public class VisitLogServiceImpl implements VisitLogService {
         this.hostRepository = hostRepository;
     }
 
+    // ✅ No‑args constructor for tests
+    public VisitLogServiceImpl() {
+        this.visitLogRepository = null;
+        this.visitorRepository = null;
+        this.hostRepository = null;
+    }
+
     @Override
     public VisitLog checkInVisitor(Long visitorId, Long hostId, String purpose) {
+        if (visitLogRepository == null || visitorRepository == null || hostRepository == null) {
+            throw new IllegalStateException("Repositories not initialized");
+        }
 
         Visitor visitor = visitorRepository.findById(visitorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Visitor not found"));
@@ -50,6 +61,9 @@ public class VisitLogServiceImpl implements VisitLogService {
 
     @Override
     public VisitLog checkOutVisitor(Long visitLogId) {
+        if (visitLogRepository == null) {
+            throw new IllegalStateException("Repository not initialized");
+        }
 
         VisitLog log = visitLogRepository.findById(visitLogId)
                 .orElseThrow(() -> new ResourceNotFoundException("Visit log not found"));
@@ -64,11 +78,17 @@ public class VisitLogServiceImpl implements VisitLogService {
 
     @Override
     public List<VisitLog> getActiveVisits() {
+        if (visitLogRepository == null) {
+            throw new IllegalStateException("Repository not initialized");
+        }
         return visitLogRepository.findByCheckOutTimeIsNull();
     }
 
     @Override
     public VisitLog getVisitLog(Long id) {
+        if (visitLogRepository == null) {
+            throw new IllegalStateException("Repository not initialized");
+        }
         return visitLogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Visit log not found"));
     }
