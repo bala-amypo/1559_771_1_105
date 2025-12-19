@@ -16,24 +16,14 @@ public class AlertNotificationServiceImpl implements AlertNotificationService {
     private final AlertNotificationRepository alertRepository;
     private final VisitLogRepository visitLogRepository;
 
-    // ✅ Constructor used by Spring
     public AlertNotificationServiceImpl(AlertNotificationRepository alertRepository,
                                         VisitLogRepository visitLogRepository) {
         this.alertRepository = alertRepository;
         this.visitLogRepository = visitLogRepository;
     }
 
-    // ✅ No‑args constructor for tests
-    public AlertNotificationServiceImpl() {
-        this.alertRepository = null;
-        this.visitLogRepository = null;
-    }
-
     @Override
     public AlertNotification sendAlert(Long visitLogId) {
-        if (visitLogRepository == null || alertRepository == null) {
-            throw new IllegalStateException("Repositories not initialized");
-        }
 
         VisitLog log = visitLogRepository.findById(visitLogId)
                 .orElseThrow(() -> new ResourceNotFoundException("Visit log not found"));
@@ -53,18 +43,12 @@ public class AlertNotificationServiceImpl implements AlertNotificationService {
 
     @Override
     public AlertNotification getAlert(Long id) {
-        if (alertRepository == null) {
-            throw new IllegalStateException("Repository not initialized");
-        }
         return alertRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alert not found"));
     }
 
     @Override
     public List<AlertNotification> getAllAlerts() {
-        if (alertRepository == null) {
-            throw new IllegalStateException("Repository not initialized");
-        }
         return alertRepository.findAll();
     }
 }
