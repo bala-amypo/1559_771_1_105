@@ -9,3 +9,4 @@ public interface AppointmentService {
     List<Appointment> getAppointmentsForHost(Long hostId);
     List<Appointment> getAppointmentsForVisitor(Long visitorId);
 }
+                                                                       
