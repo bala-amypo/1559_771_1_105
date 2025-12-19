@@ -51,4 +51,5 @@ public class AlertNotificationServiceImpl implements AlertNotificationService {
     public List<AlertNotification> getAllAlerts() {
         return alertRepository.findAll();
     }
+  
 }
