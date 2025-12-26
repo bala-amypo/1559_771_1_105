@@ -1,65 +1,43 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ApiResponse;
-import com.example.demo.dto.VisitLogDTO;
 import com.example.demo.model.VisitLog;
 import com.example.demo.service.VisitLogService;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/visits")
+@RequestMapping("/visits")
 public class VisitLogController {
 
     private final VisitLogService visitLogService;
 
+    @Autowired
     public VisitLogController(VisitLogService visitLogService) {
         this.visitLogService = visitLogService;
     }
 
-    @PostMapping("/checkin/{visitorId}/{hostId}")
-    public ResponseEntity<ApiResponse> checkIn(@PathVariable Long visitorId,
-                                               @PathVariable Long hostId,
-                                               @RequestBody String purpose) {
-
-        VisitLog log = visitLogService.checkInVisitor(visitorId, hostId, purpose);
-
-        return new ResponseEntity<>(new ApiResponse(true, "Visitor checked in", toDto(log)),
-                HttpStatus.CREATED);
+    @PostMapping("/checkin")
+    public ResponseEntity<VisitLog> checkIn(@RequestParam Long visitorId, @RequestParam String location) {
+        return ResponseEntity.ok(visitLogService.checkInVisitor(visitorId, location));
     }
 
-    @PostMapping("/checkout/{visitLogId}")
-    public ResponseEntity<ApiResponse> checkOut(@PathVariable Long visitLogId) {
-        VisitLog log = visitLogService.checkOutVisitor(visitLogId);
-        return ResponseEntity.ok(new ApiResponse(true, "Visitor checked out", toDto(log)));
+    @PostMapping("/checkout")
+    public ResponseEntity<VisitLog> checkOut(@RequestParam Long visitId) {
+        return ResponseEntity.ok(visitLogService.checkOutVisitor(visitId));
     }
 
     @GetMapping("/active")
-    public ResponseEntity<ApiResponse> active() {
-        List<VisitLogDTO> list = visitLogService.getActiveVisits()
-                .stream().map(this::toDto).collect(Collectors.toList());
-        return ResponseEntity.ok(new ApiResponse(true, "Active visits", list));
+    public ResponseEntity<List<VisitLog>> getActiveVisits() {
+        return ResponseEntity.ok(visitLogService.getActiveVisits());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> getOne(@PathVariable Long id) {
-        VisitLog log = visitLogService.getVisitLog(id);
-        return ResponseEntity.ok(new ApiResponse(true, "Visit log fetched", toDto(log)));
-    }
-
-    private VisitLogDTO toDto(VisitLog v) {
-        VisitLogDTO dto = new VisitLogDTO();
-        dto.setId(v.getId());
-        dto.setVisitorId(v.getVisitor() != null ? v.getVisitor().getId() : null);
-        dto.setHostId(v.getHost() != null ? v.getHost().getId() : null);
-        dto.setCheckInTime(v.getCheckInTime());
-        dto.setCheckOutTime(v.getCheckOutTime());
-        dto.setPurpose(v.getPurpose());
-        dto.setAccessGranted(v.getAccessGranted());
-        return dto;
+    public ResponseEntity<VisitLog> getVisitLog(@PathVariable Long id) {
+        VisitLog log = visitLogService.getVisitLog(id)
+                .orElseThrow(() -> new RuntimeException("VisitLog not found"));
+        return ResponseEntity.ok(log);
     }
 }

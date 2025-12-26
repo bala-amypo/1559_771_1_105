@@ -7,7 +7,6 @@ import com.example.demo.service.AlertNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,28 +23,14 @@ public class AlertNotificationServiceImpl implements AlertNotificationService {
     }
 
     @Override
-    public List<AlertNotification> getAllAlerts() {
-        return alertNotificationRepository.findAll();
-    }
-
-    @Override
-    public Optional<AlertNotification> getAlertById(Long id) {
-        return alertNotificationRepository.findById(id);
-    }
-
-    @Override
-    public AlertNotification saveAlert(AlertNotification alert) {
-        return alertNotificationRepository.save(alert);
-    }
-
-    @Override
-    public void deleteAlert(Long id) {
-        alertNotificationRepository.deleteById(id);
-    }
-
-    @Override
     public void sendAlert(String message) {
-        // Example implementation
-        System.out.println("Sending alert: " + message);
+        AlertNotification alert = new AlertNotification();
+        alert.setMessage(message);
+        alertNotificationRepository.save(alert);
+    }
+
+    @Override
+    public Optional<AlertNotification> getAlert(Long id) {
+        return alertNotificationRepository.findById(id);
     }
 }

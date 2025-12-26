@@ -1,55 +1,32 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ApiResponse;
-import com.example.demo.dto.AlertNotificationDTO;
 import com.example.demo.model.AlertNotification;
 import com.example.demo.service.AlertNotificationService;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
-@RequestMapping("/api/alerts")
+@RequestMapping("/alerts")
 public class AlertNotificationController {
 
-    private final AlertNotificationService alertService;
+    private final AlertNotificationService alertNotificationService;
 
-    public AlertNotificationController(AlertNotificationService alertService) {
-        this.alertService = alertService;
+    @Autowired
+    public AlertNotificationController(AlertNotificationService alertNotificationService) {
+        this.alertNotificationService = alertNotificationService;
     }
 
-    @PostMapping("/send/{visitLogId}")
-    public ResponseEntity<ApiResponse> send(@PathVariable Long visitLogId) {
-
-        AlertNotification alert = alertService.sendAlert(visitLogId);
-
-        return new ResponseEntity<>(new ApiResponse(true, "Alert sent", toDto(alert)),
-                HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<String> sendAlert(@RequestParam String message) {
+        alertNotificationService.sendAlert(message);
+        return ResponseEntity.ok("Alert sent");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> getOne(@PathVariable Long id) {
-        AlertNotification alert = alertService.getAlert(id);
-        return ResponseEntity.ok(new ApiResponse(true, "Alert fetched", toDto(alert)));
-    }
-
-    @GetMapping
-    public ResponseEntity<ApiResponse> getAll() {
-        List<AlertNotificationDTO> list = alertService.getAllAlerts()
-                .stream().map(this::toDto).collect(Collectors.toList());
-        return ResponseEntity.ok(new ApiResponse(true, "Alerts fetched", list));
-    }
-
-    private AlertNotificationDTO toDto(AlertNotification a) {
-        AlertNotificationDTO dto = new AlertNotificationDTO();
-        dto.setId(a.getId());
-        dto.setVisitLogId(a.getVisitLog() != null ? a.getVisitLog().getId() : null);
-        dto.setSentTo(a.getSentTo());
-        dto.setAlertMessage(a.getAlertMessage());
-        dto.setSentAt(a.getSentAt());
-        return dto;
+    public ResponseEntity<AlertNotification> getAlert(@PathVariable Long id) {
+        AlertNotification alert = alertNotificationService.getAlert(id)
+                .orElseThrow(() -> new RuntimeException("Alert not found"));
+        return ResponseEntity.ok(alert);
     }
 }
