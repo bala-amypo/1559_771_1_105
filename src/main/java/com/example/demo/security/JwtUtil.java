@@ -1,45 +1,33 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.stereotype.Component;
+import io.jsonwebtoken.*;
+import java.util.*;
 
-import java.util.Date;
-
-@Component
 public class JwtUtil {
 
-    // REQUIRED field names (tests use reflection)
-    private final String secret =
-            "mysecretkeymysecretkeymysecretkey12345";
+    private String secret;
+    private long jwtExpirationMs;
 
-    private final Long jwtExpirationMs = 86400000L;
+    public String generateToken(String username, String role,
+                                Long userId, String email) {
 
-    // ✅ EXACT method signature expected by tests
-    public String generateToken(String username,
-                                String role,
-                                Long userId,
-                                String email) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
+        claims.put("userId", userId);
+        claims.put("email", email);
 
         return Jwts.builder()
-                .setSubject(username)
-                .claim("role", role)
-                .claim("userId", userId)
-                .claim("email", email)
-                .setIssuedAt(new Date())
-                .setExpiration(
-                        new Date(System.currentTimeMillis() + jwtExpirationMs)
-                )
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
+            .setClaims(claims)
+            .setSubject(username)
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+            .signWith(SignatureAlgorithm.HS256, secret.getBytes())
+            .compact();
     }
 
-   
-    public Claims validateAndGetClaims(String token) {
+    public Jws<Claims> validateAndGetClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token)
-                .getBody();
+            .setSigningKey(secret.getBytes())
+            .parseClaimsJws(token);
     }
 }
