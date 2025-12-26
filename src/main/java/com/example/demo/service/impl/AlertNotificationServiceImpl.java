@@ -1,8 +1,9 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.model.AlertNotification;
 import com.example.demo.repository.AlertNotificationRepository;
 import com.example.demo.repository.VisitLogRepository;
+import com.example.demo.service.AlertNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,16 +35,17 @@ public class AlertNotificationServiceImpl implements AlertNotificationService {
 
     @Override
     public AlertNotification saveAlert(AlertNotification alert) {
-        // optionally validate visit log existence
-        if (alert.getVisitLog() != null) {
-            visitLogRepository.findById(alert.getVisitLog().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("VisitLog not found"));
-        }
         return alertNotificationRepository.save(alert);
     }
 
     @Override
     public void deleteAlert(Long id) {
         alertNotificationRepository.deleteById(id);
+    }
+
+    @Override
+    public void sendAlert(String message) {
+        // Example implementation
+        System.out.println("Sending alert: " + message);
     }
 }

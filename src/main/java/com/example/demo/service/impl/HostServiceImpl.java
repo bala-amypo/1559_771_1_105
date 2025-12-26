@@ -1,7 +1,8 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.model.Host;
 import com.example.demo.repository.HostRepository;
+import com.example.demo.service.HostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +37,10 @@ public class HostServiceImpl implements HostService {
     @Override
     public void deleteHost(Long id) {
         hostRepository.deleteById(id);
+    }
+
+    @Override
+    public Host getHostByEmail(String email) {
+        return hostRepository.findByEmail(email);
     }
 }
