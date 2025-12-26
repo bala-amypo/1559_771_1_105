@@ -1,56 +1,49 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
 
 import com.example.demo.model.AlertNotification;
-import com.example.demo.model.VisitLog;
 import com.example.demo.repository.AlertNotificationRepository;
 import com.example.demo.repository.VisitLogRepository;
-import com.example.demo.service.AlertNotificationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class AlertNotificationServiceImpl
-        implements AlertNotificationService {
+public class AlertNotificationServiceImpl implements AlertNotificationService {
 
-    private final AlertNotificationRepository alertRepository;
+    private final AlertNotificationRepository alertNotificationRepository;
     private final VisitLogRepository visitLogRepository;
 
-    // ✅ REQUIRED constructor
-    public AlertNotificationServiceImpl(
-            AlertNotificationRepository alertRepository,
-            VisitLogRepository visitLogRepository) {
-
-        this.alertRepository = alertRepository;
+    @Autowired
+    public AlertNotificationServiceImpl(AlertNotificationRepository alertNotificationRepository,
+                                        VisitLogRepository visitLogRepository) {
+        this.alertNotificationRepository = alertNotificationRepository;
         this.visitLogRepository = visitLogRepository;
     }
 
-    // ✅ Controller expects this
-    @Override
-    public AlertNotification sendAlert(Long visitLogId) {
-
-        VisitLog visitLog = visitLogRepository.findById(visitLogId)
-                .orElse(null);
-
-        if (visitLog == null) {
-            return null;
-        }
-
-        AlertNotification alert = new AlertNotification();
-        alert.setVisitLog(visitLog);
-
-        return alertRepository.save(alert);
-    }
-
-    // ✅ Controller expects this
     @Override
     public List<AlertNotification> getAllAlerts() {
-        return alertRepository.findAll();
+        return alertNotificationRepository.findAll();
     }
 
-    
     @Override
-    public AlertNotification getAlert(Long id) {
-        return alertRepository.findById(id).orElse(null);
+    public Optional<AlertNotification> getAlertById(Long id) {
+        return alertNotificationRepository.findById(id);
+    }
+
+    @Override
+    public AlertNotification saveAlert(AlertNotification alert) {
+        // optionally validate visit log existence
+        if (alert.getVisitLog() != null) {
+            visitLogRepository.findById(alert.getVisitLog().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("VisitLog not found"));
+        }
+        return alertNotificationRepository.save(alert);
+    }
+
+    @Override
+    public void deleteAlert(Long id) {
+        alertNotificationRepository.deleteById(id);
     }
 }

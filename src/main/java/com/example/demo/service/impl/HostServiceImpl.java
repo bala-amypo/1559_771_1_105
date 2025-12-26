@@ -1,36 +1,21 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Host;
 import com.example.demo.repository.HostRepository;
-import com.example.demo.service.HostService;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HostServiceImpl implements HostService {
 
     private final HostRepository hostRepository;
 
+    @Autowired
     public HostServiceImpl(HostRepository hostRepository) {
         this.hostRepository = hostRepository;
-    }
-
-    @Override
-    public Host createHost(Host host) {
-        try {
-            return hostRepository.save(host);
-        } catch (DataIntegrityViolationException ex) {
-            throw new IllegalArgumentException("constraint: " + ex.getMessage());
-        }
-    }
-
-    @Override
-    public Host getHost(Long id) {
-        return hostRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Host not found"));
     }
 
     @Override
@@ -39,8 +24,17 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
-    public Host getHostByEmail(String email) {
-        return hostRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Host not found"));
+    public Optional<Host> getHostById(Long id) {
+        return hostRepository.findById(id);
+    }
+
+    @Override
+    public Host saveHost(Host host) {
+        return hostRepository.save(host);
+    }
+
+    @Override
+    public void deleteHost(Long id) {
+        hostRepository.deleteById(id);
     }
 }
