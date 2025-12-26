@@ -22,7 +22,7 @@ public class AlertNotification {
 
     @NotBlank
     @Column(nullable = false)
-    private String alertMessage;  // ✅ replaces setMessage error
+    private String alertMessage; // ✅ renamed from message
 
     private LocalDateTime sentAt;
 

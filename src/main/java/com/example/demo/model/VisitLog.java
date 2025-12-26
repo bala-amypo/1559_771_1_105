@@ -30,7 +30,7 @@ public class VisitLog {
     @Column(nullable = false)
     private Boolean alertSent = false;
 
-    // ✅ Fixes missing method errors
+    // ✅ Added missing fields
     private String location;
 
     @Column(nullable = false)
