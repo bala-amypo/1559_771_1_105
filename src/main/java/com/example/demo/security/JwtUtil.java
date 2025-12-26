@@ -11,7 +11,6 @@ public class JwtUtil {
 
     private final String SECRET_KEY = "your_secret_key";
 
-    // Simple token with just username
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -20,7 +19,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Token with extra claims (role, expiration, extra)
     public String generateToken(String username, String role, Long expirationMillis, String extra) {
         return Jwts.builder()
                 .setSubject(username)
