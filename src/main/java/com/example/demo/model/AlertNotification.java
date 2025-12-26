@@ -1,49 +1,38 @@
-package com.example.demo.model;
+package com.example.demo.controller;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import com.example.demo.model.AlertNotification;
+import com.example.demo.service.AlertNotificationService;
+import com.example.demo.dto.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Entity
-@Table(name = "alert_notifications")
-public class AlertNotification {
+import java.util.List;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@RestController
+@RequestMapping("/api/alerts")
+@Tag(name = "Alerts", description = "Alert notifications to hosts")
+public class AlertNotificationController {
 
-    @OneToOne
-    @JoinColumn(name = "visit_log_id", unique = true)
-    private VisitLog visitLog;
+    private final AlertNotificationService alertService;
 
-    @NotBlank
-    @Column(nullable = false)
-    private String sentTo;
-
-    @NotBlank
-    @Column(nullable = false)
-    private String alertMessage; // ✅ renamed from message
-
-    private LocalDateTime sentAt;
-
-    @PrePersist
-    public void prePersist() {
-        this.sentAt = LocalDateTime.now();
+    public AlertNotificationController(AlertNotificationService alertService) {
+        this.alertService = alertService;
     }
 
-    // Getters and setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @PostMapping("/send/{visitLogId}")
+    public ResponseEntity<ApiResponse> send(@PathVariable Long visitLogId) {
+        AlertNotification alert = alertService.sendAlert(visitLogId);
+        return ResponseEntity.status(201).body(new ApiResponse(true, "Alert sent", alert));
+    }
 
-    public VisitLog getVisitLog() { return visitLog; }
-    public void setVisitLog(VisitLog visitLog) { this.visitLog = visitLog; }
+    @GetMapping("/{id}")
+    public ResponseEntity<AlertNotification> get(@PathVariable Long id) {
+        return ResponseEntity.ok(alertService.getAlert(id));
+    }
 
-    public String getSentTo() { return sentTo; }
-    public void setSentTo(String sentTo) { this.sentTo = sentTo; }
-
-    public String getAlertMessage() { return alertMessage; }
-    public void setAlertMessage(String alertMessage) { this.alertMessage = alertMessage; }
-
-    public LocalDateTime getSentAt() { return sentAt; }
-    public void setSentAt(LocalDateTime sentAt) { this.sentAt = sentAt; }
+    @GetMapping
+    public ResponseEntity<List<AlertNotification>> all() {
+        return ResponseEntity.ok(alertService.getAllAlerts());
+    }
 }
