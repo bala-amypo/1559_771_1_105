@@ -5,9 +5,11 @@ import java.util.List;
 
 public interface AppointmentService {
 
-    Appointment save(Appointment appointment);
+    Appointment createAppointment(Long visitorId, Long hostId, Appointment appointment);
 
-    List<Appointment> getByHost(Long hostId);
+    Appointment getAppointment(Long id);
 
-    List<Appointment> getByVisitor(Long visitorId);
+    List<Appointment> getAppointmentsForHost(Long hostId);
+
+    List<Appointment> getAppointmentsForVisitor(Long visitorId);
 }

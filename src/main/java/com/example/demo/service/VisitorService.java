@@ -5,7 +5,9 @@ import java.util.List;
 
 public interface VisitorService {
 
-    Visitor save(Visitor visitor);
+    Visitor createVisitor(Visitor visitor);
 
-    List<Visitor> findAll();
+    Visitor getVisitor(Long id);
+
+    List<Visitor> getAllVisitors();
 }

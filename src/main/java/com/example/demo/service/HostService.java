@@ -1,13 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Host;
-import java.util.Optional;
+import java.util.List;
 
 public interface HostService {
 
-    Host save(Host host);
+    Host createHost(Host host);
 
-    Optional<Host> getHost(Long id);
+    Host getHost(Long id);
 
-    Optional<Host> getHostByEmail(String email);
+    List<Host> getAllHosts();
+
+    Host getHostByEmail(String email);
 }
