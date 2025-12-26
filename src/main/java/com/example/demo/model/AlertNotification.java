@@ -17,10 +17,12 @@ public class AlertNotification {
     private VisitLog visitLog;
 
     @NotBlank
+    @Column(nullable = false)
     private String sentTo;
 
     @NotBlank
-    private String alertMessage;   // <-- use this instead of "message"
+    @Column(nullable = false)
+    private String alertMessage;  // ✅ replaces setMessage error
 
     private LocalDateTime sentAt;
 
@@ -29,7 +31,7 @@ public class AlertNotification {
         this.sentAt = LocalDateTime.now();
     }
 
-    // getters and setters
+    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

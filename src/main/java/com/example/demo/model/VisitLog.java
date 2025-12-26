@@ -12,20 +12,28 @@ public class VisitLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne private Visitor visitor;
-    @ManyToOne private Host host;
+    @ManyToOne
+    private Visitor visitor;
+
+    @ManyToOne
+    private Host host;
 
     private LocalDateTime checkInTime;
     private LocalDateTime checkOutTime;
+
     private String purpose;
 
     @NotNull
+    @Column(nullable = false)
     private Boolean accessGranted;
 
+    @Column(nullable = false)
     private Boolean alertSent = false;
 
-    // NEW fields to fix errors
+    // ✅ Fixes missing method errors
     private String location;
+
+    @Column(nullable = false)
     private boolean checkedOut;
 
     @PrePersist
@@ -34,7 +42,7 @@ public class VisitLog {
         if (alertSent == null) alertSent = false;
     }
 
-    // getters and setters
+    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
