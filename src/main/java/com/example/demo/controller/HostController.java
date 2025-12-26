@@ -2,14 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Host;
 import com.example.demo.service.HostService;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/hosts")
+@RequestMapping("/hosts")
 public class HostController {
 
     private final HostService hostService;
@@ -19,23 +16,23 @@ public class HostController {
     }
 
     @PostMapping
-    public ResponseEntity<Host> createHost(@Valid @RequestBody Host host) {
-        return ResponseEntity.ok(hostService.createHost(host));
+    public Host createHost(@RequestBody Host host) {
+        return hostService.createHost(host);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Host> getHost(@PathVariable Long id) {
-        return ResponseEntity.ok(hostService.getHost(id));
+    public Host getHost(@PathVariable Long id) {
+        return hostService.getHost(id);
     }
 
     @GetMapping
-    public ResponseEntity<List<Host>> getAllHosts() {
-        return ResponseEntity.ok(hostService.getAllHosts());
+    public List<Host> getAllHosts() {
+        return hostService.getAllHosts();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteHost(@PathVariable Long id) {
+    public String deleteHost(@PathVariable Long id) {
         hostService.deleteHost(id);
-        return ResponseEntity.noContent().build();
+        return "Host deleted successfully";
     }
 }
