@@ -1,38 +1,38 @@
-package com.example.demo.controller;
+package com.example.demo.model;
 
-import com.example.demo.model.AlertNotification;
-import com.example.demo.service.AlertNotificationService;
-import com.example.demo.dto.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-import java.util.List;
+@Entity
+public class AlertNotification {
 
-@RestController
-@RequestMapping("/api/alerts")
-@Tag(name = "Alerts", description = "Alert notifications to hosts")
-public class AlertNotificationController {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private final AlertNotificationService alertService;
+    private String alertMessage;
+    private String sentTo;
+    private LocalDateTime sentAt;
 
-    public AlertNotificationController(AlertNotificationService alertService) {
-        this.alertService = alertService;
-    }
+    @OneToOne
+    private VisitLog visitLog;
 
-    @PostMapping("/send/{visitLogId}")
-    public ResponseEntity<ApiResponse> send(@PathVariable Long visitLogId) {
-        AlertNotification alert = alertService.sendAlert(visitLogId);
-        return ResponseEntity.status(201).body(new ApiResponse(true, "Alert sent", alert));
-    }
+    // Constructors
+    public AlertNotification() {}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AlertNotification> get(@PathVariable Long id) {
-        return ResponseEntity.ok(alertService.getAlert(id));
-    }
+    // Getters & Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    @GetMapping
-    public ResponseEntity<List<AlertNotification>> all() {
-        return ResponseEntity.ok(alertService.getAllAlerts());
-    }
+    public String getAlertMessage() { return alertMessage; }
+    public void setAlertMessage(String alertMessage) { this.alertMessage = alertMessage; }
+
+    public String getSentTo() { return sentTo; }
+    public void setSentTo(String sentTo) { this.sentTo = sentTo; }
+
+    public LocalDateTime getSentAt() { return sentAt; }
+    public void setSentAt(LocalDateTime sentAt) { this.sentAt = sentAt; }
+
+    public VisitLog getVisitLog() { return visitLog; }
+    public void setVisitLog(VisitLog visitLog) { this.visitLog = visitLog; }
 }
