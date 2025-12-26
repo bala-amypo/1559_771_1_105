@@ -1,11 +1,9 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Visitor;
 import com.example.demo.repository.VisitorRepository;
 import com.example.demo.service.VisitorService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -25,11 +23,18 @@ public class VisitorServiceImpl implements VisitorService {
     @Override
     public Visitor getVisitor(Long id) {
         return visitorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Visitor not found"));
+                .orElseThrow(() -> new RuntimeException("Visitor not found"));
     }
 
     @Override
     public List<Visitor> getAllVisitors() {
         return visitorRepository.findAll();
+    }
+
+    @Override
+    public void deleteVisitor(Long id) {
+        Visitor visitor = visitorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Visitor not found"));
+        visitorRepository.delete(visitor);
     }
 }

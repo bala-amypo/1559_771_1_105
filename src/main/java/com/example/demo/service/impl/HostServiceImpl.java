@@ -1,11 +1,9 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Host;
 import com.example.demo.repository.HostRepository;
 import com.example.demo.service.HostService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -25,7 +23,7 @@ public class HostServiceImpl implements HostService {
     @Override
     public Host getHost(Long id) {
         return hostRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Host not found"));
+                .orElseThrow(() -> new RuntimeException("Host not found"));
     }
 
     @Override
@@ -34,8 +32,9 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
-    public Host getHostByEmail(String email) {
-        return hostRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Host not found with email"));
+    public void deleteHost(Long id) {
+        Host host = hostRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Host not found"));
+        hostRepository.delete(host);
     }
 }
