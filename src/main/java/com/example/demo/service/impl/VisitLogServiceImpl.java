@@ -24,30 +24,31 @@ public class VisitLogServiceImpl implements VisitLogService {
     }
 
     @Override
-    public List<VisitLog> getAllLogs() {
-        return visitLogRepository.findAll();
+    public VisitLog checkInVisitor(Long visitorId, String location) {
+        Visitor visitor = visitorRepository.findById(visitorId)
+                .orElseThrow(() -> new RuntimeException("Visitor not found"));
+        VisitLog log = new VisitLog();
+        log.setVisitor(visitor);
+        log.setLocation(location);
+        log.setCheckedOut(false);
+        return visitLogRepository.save(log);
+    }
+
+    @Override
+    public VisitLog checkOutVisitor(Long visitId) {
+        VisitLog log = visitLogRepository.findById(visitId)
+                .orElseThrow(() -> new RuntimeException("VisitLog not found"));
+        log.setCheckedOut(true);
+        return visitLogRepository.save(log);
+    }
+
+    @Override
+    public List<VisitLog> getActiveVisits() {
+        return visitLogRepository.findByCheckedOutFalse();
     }
 
     @Override
     public Optional<VisitLog> getVisitLog(Long id) {
         return visitLogRepository.findById(id);
-    }
-
-    @Override
-    public VisitLog saveLog(VisitLog log) {
-        Visitor visitor = visitorRepository.findById(log.getVisitor().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Visitor not found"));
-        log.setVisitor(visitor);
-        return visitLogRepository.save(log);
-    }
-
-    @Override
-    public void deleteLog(Long id) {
-        visitLogRepository.deleteById(id);
-    }
-
-    @Override
-    public void logVisit(String details) {
-        System.out.println("Logging visit: " + details);
     }
 }

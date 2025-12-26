@@ -6,7 +6,6 @@ import com.example.demo.service.HostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,23 +19,13 @@ public class HostServiceImpl implements HostService {
     }
 
     @Override
-    public List<Host> getAllHosts() {
-        return hostRepository.findAll();
-    }
-
-    @Override
-    public Optional<Host> getHostById(Long id) {
-        return hostRepository.findById(id);
-    }
-
-    @Override
-    public Host saveHost(Host host) {
+    public Host createHost(Host host) {
         return hostRepository.save(host);
     }
 
     @Override
-    public void deleteHost(Long id) {
-        hostRepository.deleteById(id);
+    public Optional<Host> getHost(Long id) {
+        return hostRepository.findById(id);
     }
 
     @Override
