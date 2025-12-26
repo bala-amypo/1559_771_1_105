@@ -2,10 +2,14 @@ package com.example.demo.controller;
 
 import com.example.demo.model.User;
 import com.example.demo.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
+@Tag(name = "Authentication", description = "User registration and login")
 public class AuthController {
 
     private final AuthService authService;
@@ -14,13 +18,25 @@ public class AuthController {
         this.authService = authService;
     }
 
+    @Operation(summary = "Register new user")
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return authService.register(user);
+    public ResponseEntity<User> register(@RequestBody User user) {
+        return ResponseEntity.ok(authService.register(user));
     }
 
+    @Operation(summary = "Login user and return JWT token")
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password) {
-        return authService.login(username, password);
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request.getUsername(), request.getPassword()));
+    }
+
+    public static class LoginRequest {
+        private String username;
+        private String password;
+
+        public String getUsername() { return username; }
+        public void setUsername(String username) { this.username = username; }
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
     }
 }
