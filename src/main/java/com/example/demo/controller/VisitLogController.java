@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/visit-logs")
+@RequestMapping("/api/visitlogs")
 public class VisitLogController {
 
     private final VisitLogService visitLogService;
@@ -18,15 +18,19 @@ public class VisitLogController {
     }
 
     @PostMapping("/checkin/{visitorId}/{hostId}")
-    public ResponseEntity<VisitLog> checkIn(@PathVariable Long visitorId,
-                                            @PathVariable Long hostId,
-                                            @RequestParam String purpose) {
-        return ResponseEntity.ok(visitLogService.checkInVisitor(visitorId, hostId, purpose));
+    public ResponseEntity<VisitLog> checkIn(
+            @PathVariable Long visitorId,
+            @PathVariable Long hostId,
+            @RequestParam String purpose) {
+
+        return ResponseEntity.ok(
+                visitLogService.checkInVisitor(visitorId, hostId, purpose)
+        );
     }
 
-    @PutMapping("/checkout/{id}")
-    public ResponseEntity<VisitLog> checkOut(@PathVariable Long id) {
-        return ResponseEntity.ok(visitLogService.checkOutVisitor(id));
+    @PostMapping("/checkout/{visitLogId}")
+    public ResponseEntity<VisitLog> checkOut(@PathVariable Long visitLogId) {
+        return ResponseEntity.ok(visitLogService.checkOutVisitor(visitLogId));
     }
 
     @GetMapping("/{id}")

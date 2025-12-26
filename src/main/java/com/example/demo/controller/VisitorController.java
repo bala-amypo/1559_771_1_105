@@ -2,13 +2,14 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Visitor;
 import com.example.demo.service.VisitorService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/visitors")
+@RequestMapping("/api/visitors")
 public class VisitorController {
 
     private final VisitorService visitorService;
@@ -18,7 +19,7 @@ public class VisitorController {
     }
 
     @PostMapping
-    public ResponseEntity<Visitor> createVisitor(@RequestBody Visitor visitor) {
+    public ResponseEntity<Visitor> createVisitor(@Valid @RequestBody Visitor visitor) {
         return ResponseEntity.ok(visitorService.createVisitor(visitor));
     }
 
@@ -30,5 +31,11 @@ public class VisitorController {
     @GetMapping
     public ResponseEntity<List<Visitor>> getAllVisitors() {
         return ResponseEntity.ok(visitorService.getAllVisitors());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteVisitor(@PathVariable Long id) {
+        visitorService.deleteVisitor(id);
+        return ResponseEntity.noContent().build();
     }
 }

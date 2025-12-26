@@ -2,13 +2,14 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Appointment;
 import com.example.demo.service.AppointmentService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/appointments")
+@RequestMapping("/api/appointments")
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
@@ -18,10 +19,14 @@ public class AppointmentController {
     }
 
     @PostMapping("/{visitorId}/{hostId}")
-    public ResponseEntity<Appointment> createAppointment(@PathVariable Long visitorId,
-                                                         @PathVariable Long hostId,
-                                                         @RequestBody Appointment appointment) {
-        return ResponseEntity.ok(appointmentService.createAppointment(visitorId, hostId, appointment));
+    public ResponseEntity<Appointment> createAppointment(
+            @PathVariable Long visitorId,
+            @PathVariable Long hostId,
+            @Valid @RequestBody Appointment appointment) {
+
+        return ResponseEntity.ok(
+                appointmentService.createAppointment(visitorId, hostId, appointment)
+        );
     }
 
     @GetMapping("/{id}")
