@@ -7,7 +7,7 @@ import com.example.demo.repository.VisitLogRepository;
 import com.example.demo.service.AlertNotificationService;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class AlertNotificationServiceImpl
@@ -16,7 +16,7 @@ public class AlertNotificationServiceImpl
     private final AlertNotificationRepository alertRepository;
     private final VisitLogRepository visitLogRepository;
 
-    // ✅ REQUIRED constructor (tests expect this)
+    // ✅ REQUIRED constructor
     public AlertNotificationServiceImpl(
             AlertNotificationRepository alertRepository,
             VisitLogRepository visitLogRepository) {
@@ -25,7 +25,30 @@ public class AlertNotificationServiceImpl
         this.visitLogRepository = visitLogRepository;
     }
 
-    // ✅ REQUIRED BY INTERFACE
+    // ✅ Controller expects this
+    @Override
+    public AlertNotification sendAlert(Long visitLogId) {
+
+        VisitLog visitLog = visitLogRepository.findById(visitLogId)
+                .orElse(null);
+
+        if (visitLog == null) {
+            return null;
+        }
+
+        AlertNotification alert = new AlertNotification();
+        alert.setVisitLog(visitLog);
+
+        return alertRepository.save(alert);
+    }
+
+    // ✅ Controller expects this
+    @Override
+    public List<AlertNotification> getAllAlerts() {
+        return alertRepository.findAll();
+    }
+
+    
     @Override
     public AlertNotification getAlert(Long id) {
         return alertRepository.findById(id).orElse(null);
