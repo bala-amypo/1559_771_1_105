@@ -20,18 +20,6 @@ public class Appointment {
     private String purpose;
     private String status;
 
-    // Constructors
-    public Appointment() {}
-
-    public Appointment(Visitor visitor, Host host, LocalDate appointmentDate, String purpose, String status) {
-        this.visitor = visitor;
-        this.host = host;
-        this.appointmentDate = appointmentDate;
-        this.purpose = purpose;
-        this.status = status;
-    }
-
-    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -42,7 +30,9 @@ public class Appointment {
     public void setHost(Host host) { this.host = host; }
 
     public LocalDate getAppointmentDate() { return appointmentDate; }
-    public void setAppointmentDate(LocalDate appointmentDate) { this.appointmentDate = appointmentDate; }
+    public void setAppointmentDate(LocalDate appointmentDate) {
+        this.appointmentDate = appointmentDate;
+    }
 
     public String getPurpose() { return purpose; }
     public void setPurpose(String purpose) { this.purpose = purpose; }
