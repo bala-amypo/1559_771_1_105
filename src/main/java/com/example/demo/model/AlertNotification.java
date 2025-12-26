@@ -12,19 +12,16 @@ public class AlertNotification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "visit_log_id", nullable = false, unique = true)
+    @OneToOne
+    @JoinColumn(name = "visit_log_id", unique = true)
     private VisitLog visitLog;
 
-    @NotBlank(message = "Recipient is required")
-    @Column(nullable = false)
+    @NotBlank
     private String sentTo;
 
-    @NotBlank(message = "Alert message is required")
-    @Column(nullable = false)
-    private String alertMessage;
+    @NotBlank
+    private String alertMessage;   // <-- use this instead of "message"
 
-    @Column(nullable = false)
     private LocalDateTime sentAt;
 
     @PrePersist
@@ -32,16 +29,7 @@ public class AlertNotification {
         this.sentAt = LocalDateTime.now();
     }
 
-    public AlertNotification() {}
-
-    public AlertNotification(Long id, VisitLog visitLog, String sentTo, String alertMessage) {
-        this.id = id;
-        this.visitLog = visitLog;
-        this.sentTo = sentTo;
-        this.alertMessage = alertMessage;
-    }
-
-    // Getters and Setters
+    // getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
