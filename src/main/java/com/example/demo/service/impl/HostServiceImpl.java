@@ -10,20 +10,24 @@ import java.util.Optional;
 @Service
 public class HostServiceImpl implements HostService {
 
-    private HostRepository hostRepository;
+    private final HostRepository repository;
 
-    public HostServiceImpl() {}
-
-    public HostServiceImpl(HostRepository hostRepository) {
-        this.hostRepository = hostRepository;
+    public HostServiceImpl(HostRepository repository) {
+        this.repository = repository;
     }
 
-    public Host createHost(Host host) {
-        return hostRepository.save(host);
+    @Override
+    public Host save(Host host) {
+        return repository.save(host);
     }
 
-    public Host getHost(Long id) {
-        return hostRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Host not found"));
+    @Override
+    public Optional<Host> getHost(Long id) {
+        return repository.findById(id);
+    }
+
+    @Override
+    public Optional<Host> getHostByEmail(String email) {
+        return repository.findByEmail(email);
     }
 }
