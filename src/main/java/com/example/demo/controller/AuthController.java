@@ -1,11 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
-import com.example.demo.model.User;
-import com.example.demo.service.UserService;
-import org.springframework.http.HttpStatus;
+import com.example.demo.dto.RegisterRequest;
+import com.example.demo.service.AuthService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,38 +12,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> register(@RequestBody User user) {
-        User saved = userService.registerUser(user);
-        return new ResponseEntity<>(new ApiResponse(true, "User registered", saved), HttpStatus.CREATED);
+    public ResponseEntity<String> register(
+            @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@RequestBody AuthRequest request) {
-
-        User user = userService.findByEmail(request.getEmail());
-
-        if (!user.getPassword().equals(request.getPassword())) {
-            return new ResponseEntity<>(
-                    new ApiResponse(false, "Invalid credentials", null),
-                    HttpStatus.UNAUTHORIZED
-            );
-        }
-
-        // No JWT — return a dummy token or null
-        AuthResponse response = new AuthResponse(
-                "NO_TOKEN_SECURITY_DISABLED",
-                user.getId(),
-                user.getEmail(),
-                user.getRole()
-        );
-
-        return ResponseEntity.ok(new ApiResponse(true, "Login successful", response));
+    public ResponseEntity<AuthResponse> login(
+            @RequestBody AuthRequest request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }
