@@ -2,8 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Appointment;
 import com.example.demo.service.AppointmentService;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -16,13 +17,25 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
 
+    @PostMapping("/{visitorId}/{hostId}")
+    public ResponseEntity<Appointment> createAppointment(@PathVariable Long visitorId,
+                                                         @PathVariable Long hostId,
+                                                         @RequestBody Appointment appointment) {
+        return ResponseEntity.ok(appointmentService.createAppointment(visitorId, hostId, appointment));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Appointment> getAppointment(@PathVariable Long id) {
+        return ResponseEntity.ok(appointmentService.getAppointment(id));
+    }
+
     @GetMapping("/host/{hostId}")
-    public List<Appointment> getByHost(@PathVariable Long hostId) {
-        return appointmentService.getByHost(hostId);
+    public ResponseEntity<List<Appointment>> getByHost(@PathVariable Long hostId) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsForHost(hostId));
     }
 
     @GetMapping("/visitor/{visitorId}")
-    public List<Appointment> getByVisitor(@PathVariable Long visitorId) {
-        return appointmentService.getByVisitor(visitorId);
+    public ResponseEntity<List<Appointment>> getByVisitor(@PathVariable Long visitorId) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsForVisitor(visitorId));
     }
 }

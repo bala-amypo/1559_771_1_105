@@ -2,8 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.model.AlertNotification;
 import com.example.demo.service.AlertNotificationService;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -12,19 +13,22 @@ public class AlertNotificationController {
 
     private final AlertNotificationService alertService;
 
-    public AlertNotificationController(
-            AlertNotificationService alertService) {
+    public AlertNotificationController(AlertNotificationService alertService) {
         this.alertService = alertService;
     }
 
-    @PostMapping
-    public AlertNotification sendAlert(
-            @RequestBody AlertNotification alert) {
-        return alertService.save(alert);
+    @PostMapping("/{visitLogId}")
+    public ResponseEntity<AlertNotification> sendAlert(@PathVariable Long visitLogId) {
+        return ResponseEntity.ok(alertService.sendAlert(visitLogId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AlertNotification> getAlert(@PathVariable Long id) {
+        return ResponseEntity.ok(alertService.getAlert(id));
     }
 
     @GetMapping
-    public List<AlertNotification> getAllAlerts() {
-        return alertService.findAll();
+    public ResponseEntity<List<AlertNotification>> getAllAlerts() {
+        return ResponseEntity.ok(alertService.getAllAlerts());
     }
 }

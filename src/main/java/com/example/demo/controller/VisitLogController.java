@@ -2,8 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.model.VisitLog;
 import com.example.demo.service.VisitLogService;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -16,18 +17,25 @@ public class VisitLogController {
         this.visitLogService = visitLogService;
     }
 
-    @PostMapping
-    public VisitLog createLog(@RequestBody VisitLog visitLog) {
-        return visitLogService.save(visitLog);
-    }
-
-    @GetMapping
-    public List<VisitLog> getAllLogs() {
-        return visitLogService.findAll();
+    @PostMapping("/checkin/{visitorId}/{hostId}")
+    public ResponseEntity<VisitLog> checkIn(@PathVariable Long visitorId,
+                                            @PathVariable Long hostId,
+                                            @RequestParam String purpose) {
+        return ResponseEntity.ok(visitLogService.checkInVisitor(visitorId, hostId, purpose));
     }
 
     @PutMapping("/checkout/{id}")
-    public VisitLog checkOut(@PathVariable Long id) {
-        return visitLogService.checkOut(id);
+    public ResponseEntity<VisitLog> checkOut(@PathVariable Long id) {
+        return ResponseEntity.ok(visitLogService.checkOutVisitor(id));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VisitLog> getVisitLog(@PathVariable Long id) {
+        return ResponseEntity.ok(visitLogService.getVisitLog(id));
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<VisitLog>> getActiveVisits() {
+        return ResponseEntity.ok(visitLogService.getActiveVisits());
     }
 }
