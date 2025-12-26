@@ -2,14 +2,12 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.AlertNotification;
 import com.example.demo.model.VisitLog;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AlertNotificationRepository;
 import com.example.demo.repository.VisitLogRepository;
 import com.example.demo.service.AlertNotificationService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AlertNotificationServiceImpl
@@ -27,25 +25,9 @@ public class AlertNotificationServiceImpl
         this.visitLogRepository = visitLogRepository;
     }
 
-    // OPTIONAL example methods (safe for tests)
-
+    // ✅ REQUIRED BY INTERFACE
     @Override
-    public AlertNotification createAlert(Long visitLogId, String message) {
-
-        VisitLog visitLog = visitLogRepository.findById(visitLogId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Visit log not found"));
-
-        AlertNotification alert = new AlertNotification();
-        alert.setVisitLog(visitLog);
-        alert.setMessage(message);
-        alert.setSentTime(LocalDateTime.now());
-
-        return alertRepository.save(alert);
-    }
-
-    @Override
-    public List<AlertNotification> getAllAlerts() {
-        return alertRepository.findAll();
+    public AlertNotification getAlert(Long id) {
+        return alertRepository.findById(id).orElse(null);
     }
 }
