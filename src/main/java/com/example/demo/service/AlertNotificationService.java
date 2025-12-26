@@ -1,10 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.model.AlertNotification;
-
-import java.util.Optional;
+import java.util.List;
 
 public interface AlertNotificationService {
-    void sendAlert(String message);
-    Optional<AlertNotification> getAlert(Long id);
+    AlertNotification sendAlert(Long visitLogId);
+    AlertNotification getAlert(Long id);
+    List<AlertNotification> getAllAlerts();
 }

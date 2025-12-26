@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface VisitLogRepository extends JpaRepository<VisitLog, Long> {
-    List<VisitLog> findByCheckedOutFalse();  // ✅ fixes missing method error
+    List<VisitLog> findByCheckedOutFalse(); // ✅ fixes missing method error
 }
