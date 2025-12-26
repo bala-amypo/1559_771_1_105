@@ -25,7 +25,7 @@ public class SecurityConfig {
                 ).permitAll()
                 .anyRequest().authenticated()
             )
-            .csrf(csrf -> csrf.disable()); // Optional: disable CSRF for testing
+            .csrf(csrf -> csrf.disable()); // disable CSRF for testing Swagger
 
         return http.build();
     }
