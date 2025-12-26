@@ -27,14 +27,14 @@ public class AlertNotificationServiceImpl implements AlertNotificationService {
         VisitLog log = visitLogRepository.findById(visitLogId)
             .orElseThrow(() -> new ResourceNotFoundException("VisitLog not found"));
 
-        alertRepository.findByVisitLogId(visitLogId).ifPresent(a -> {
+        alertRepository.findByVisitLogId(visitLogId).ifPresent(existing -> {
             throw new IllegalArgumentException("Alert already sent");
         });
 
         AlertNotification alert = new AlertNotification();
         alert.setVisitLog(log);
         alert.setSentTo(log.getHost().getEmail());
-        alert.setAlertMessage("Visitor alert for visitLog #" + log.getId()); // ✅ correct setter
+        alert.setAlertMessage("Visitor alert for visitLog #" + log.getId());
 
         log.setAlertSent(true);
         visitLogRepository.save(log);
