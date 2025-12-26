@@ -18,13 +18,11 @@ public class VisitLog {
 
     private LocalDateTime checkInTime;
     private LocalDateTime checkOutTime;
-    private Boolean accessGranted = false;
+    private String purpose;
+    private Boolean accessGranted;
     private Boolean alertSent = false;
 
-    // Constructors
-    public VisitLog() {}
-
-    // Getters & Setters
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -39,6 +37,9 @@ public class VisitLog {
 
     public LocalDateTime getCheckOutTime() { return checkOutTime; }
     public void setCheckOutTime(LocalDateTime checkOutTime) { this.checkOutTime = checkOutTime; }
+
+    public String getPurpose() { return purpose; }
+    public void setPurpose(String purpose) { this.purpose = purpose; }
 
     public Boolean getAccessGranted() { return accessGranted; }
     public void setAccessGranted(Boolean accessGranted) { this.accessGranted = accessGranted; }
