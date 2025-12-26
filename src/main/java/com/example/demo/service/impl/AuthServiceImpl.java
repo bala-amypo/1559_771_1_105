@@ -1,9 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtUtil;
@@ -15,70 +11,32 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public AuthServiceImpl(
-            UserRepository userRepository,
-            JwtUtil jwtUtil,
-            BCryptPasswordEncoder passwordEncoder) {
-
+    public AuthServiceImpl(UserRepository userRepository, 
+                           BCryptPasswordEncoder passwordEncoder,
+                           JwtUtil jwtUtil) {
         this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
-    // =========================
-    // REGISTER
-    // =========================
     @Override
-    public AuthResponse register(RegisterRequest request) {
-
-        // check duplicate username
-        userRepository.findByUsername(request.getUsername())
-                .ifPresent(u -> {
-                    throw new IllegalArgumentException("Username already exists");
-                });
-
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setRole(request.getRole()); // USER / ADMIN
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        User saved = userRepository.save(user);
-
-        String token = jwtUtil.generateToken(
-                saved.getUsername(),
-                saved.getRole(),
-                saved.getId(),
-                saved.getEmail()
-        );
-
-        return new AuthResponse(token);
+    public User register(User user) {
+        // Hash password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
-    // =========================
-    // LOGIN
-    // =========================
     @Override
-    public AuthResponse login(AuthRequest request) {
-
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Invalid username or password"));
-
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid username or password");
+    public String login(String username, String password) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid password");
         }
-
-        String token = jwtUtil.generateToken(
-                user.getUsername(),
-                user.getRole(),
-                user.getId(),
-                user.getEmail()
-        );
-
-        return new AuthResponse(token);
+        // Generate JWT token
+        return jwtUtil.generateToken(user.getUsername(), user.getRole(), user.getId(), user.getEmail());
     }
 }
