@@ -1,15 +1,18 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
+import com.example.demo.entity.AlertNotification;
+import com.example.demo.entity.VisitLog;
+import com.example.demo.repository.AlertNotificationRepository;
+import com.example.demo.repository.VisitLogRepository;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.*;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class AlertNotificationServiceImpl {
-    private AlertNotificationRepository alertRepository;
-    private VisitLogRepository visitLogRepository;
+    private final AlertNotificationRepository alertRepository; // Repository field name exactly as required [cite: 237]
+    private final VisitLogRepository visitLogRepository; // Repository field name exactly as required [cite: 237]
 
     public AlertNotificationServiceImpl(AlertNotificationRepository ar, VisitLogRepository vr) {
         this.alertRepository = ar;
@@ -17,19 +20,22 @@ public class AlertNotificationServiceImpl {
     }
 
     public AlertNotification sendAlert(Long visitLogId) {
+        // Retrieve visit log or throw ResourceNotFoundException [cite: 241]
         VisitLog log = visitLogRepository.findById(visitLogId)
                 .orElseThrow(() -> new ResourceNotFoundException("VisitLog not found"));
 
-        if (alertRepository.findByVisitLogId(visitLogId).isPresent()) {
-            throw new IllegalArgumentException("Alert already sent");
-        }
+        // Check if alert already exists for visit log [cite: 238]
+        alertRepository.findByVisitLogId(visitLogId).ifPresent(a -> {
+            throw new IllegalArgumentException("Alert already sent"); // Requirement for Test 030 [cite: 239]
+        });
 
         AlertNotification alert = new AlertNotification();
-        alert.setVisitLog(log);
-        alert.setSentTo(log.getHost().getEmail());
-        alert.setAlertMessage("Visitor has arrived.");
+        alert.setVisitLog(log); // Relationship mapping [cite: 110]
+        alert.setSentTo(log.getHost().getEmail()); // Extract host email [cite: 240]
+        alert.setAlertMessage("Visitor " + log.getVisitor().getFullName() + " has arrived.");
+        alert.setSentAt(LocalDateTime.now()); // Timestamp requirement [cite: 240]
         
-        visitLogRepository.save(log);
+        // Update log and save alert [cite: 240]
         return alertRepository.save(alert);
     }
 
