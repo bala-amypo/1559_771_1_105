@@ -11,26 +11,23 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    // Handles missing entities (Visitor, Host, Appointment, Alert) [cite: 402-405, 418]
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFound(ResourceNotFoundException ex) {
-        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    // Handles validation failures (Past dates, duplicate alerts, invalid checkouts) [cite: 408-411, 419, 420]
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class, BadRequestException.class})
     public ResponseEntity<Object> handleBadRequest(Exception ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleGlobalException(Exception ex) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
-    }
-
-    private ResponseEntity<Object> buildResponse(HttpStatus status, String message) {
+    private ResponseEntity<Object> buildErrorResponse(HttpStatus status, String message) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", status.value());
-        body.put("message", message);
+        body.put("timestamp", LocalDateTime.now()); // [cite: 416]
+        body.put("status", status.value()); // [cite: 416]
+        body.put("message", message); // [cite: 416]
         return new ResponseEntity<>(body, status);
     }
 }
