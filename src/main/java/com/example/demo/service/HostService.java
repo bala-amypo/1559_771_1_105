@@ -1,13 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Host;
+import com.example.demo.entity.Host;
 import java.util.List;
 
 public interface HostService {
     Host createHost(Host host);
     Host getHost(Long id);
     List<Host> getAllHosts();
-
-    // Delete method
-    void deleteHost(Long id);
+    Host getHostByEmail(String email);
 }
