@@ -1,35 +1,32 @@
-package com.example.demo.security;
+package com.example.demo.config;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import java.util.Date;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@Component
-public class JwtUtil {
-    @Value("${com.example.demo.security.secret}")
-    private String secret;
+@Configuration
+public class SwaggerConfig {
 
-    @Value("${com.example.demo.security.jwtExpirationMs}")
-    private Long jwtExpirationMs;
-
-    public String generateToken(String username, String role, Long userId, String email) {
-        return Jwts.builder()
-                .setSubject(username)
-                .claim("role", role)
-                .claim("userId", userId)
-                .claim("email", email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    public Jws<Claims> validateAndGetClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes().length < 32 ? Keys.secretKeyFor(SignatureAlgorithm.HS256) : Keys.hmacShaKeyFor(secret.getBytes()))
-                .build()
-                .parseClaimsJws(token);
+    @Bean
+    public OpenAPI customOpenAPI() {
+        final String securitySchemeName = "bearerAuth";
+        
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Digital Visitor Management API")
+                        .version("1.0")
+                        .description("API for managing visitors, hosts, and appointments with JWT security."))
+                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .components(new Components()
+                        .addSecuritySchemes(securitySchemeName,
+                                new SecurityScheme()
+                                        .name(securitySchemeName)
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")));
     }
 }
