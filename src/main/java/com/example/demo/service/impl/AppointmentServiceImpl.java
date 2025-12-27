@@ -1,8 +1,8 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Appointment;
-import com.example.demo.entity.Visitor;
-import com.example.demo.entity.Host;
+import com.example.demo.model.Appointment;
+import com.example.demo.model.Visitor;
+import com.example.demo.model.Host;
 import com.example.demo.repository.*;
 import com.example.demo.service.AppointmentService;
 import com.example.demo.exception.ResourceNotFoundException;

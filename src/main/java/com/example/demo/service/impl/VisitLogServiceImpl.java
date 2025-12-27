@@ -2,7 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.VisitLog;
 import com.example.demo.entity.Visitor;
-import com.example.demo.entity.Host;
+import com.example.demo.model.Host;
 import com.example.demo.repository.VisitLogRepository;
 import com.example.demo.repository.VisitorRepository;
 import com.example.demo.repository.HostRepository;
