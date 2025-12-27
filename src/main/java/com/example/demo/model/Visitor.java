@@ -15,5 +15,10 @@ public class Visitor {
     private String email;
     private String phone;
     private String idProofNumber;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }
