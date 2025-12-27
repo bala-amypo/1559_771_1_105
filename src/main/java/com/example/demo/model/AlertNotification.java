@@ -1,12 +1,10 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "alert_notifications")
-@Data
 public class AlertNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,8 +17,17 @@ public class AlertNotification {
     @JoinColumn(name = "visit_log_id")
     private VisitLog visitLog;
 
-    @PrePersist
-    protected void onCreate() {
-        this.sentAt = LocalDateTime.now();
-    }
+    public AlertNotification() {}
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getAlertMessage() { return alertMessage; }
+    public void setAlertMessage(String alertMessage) { this.alertMessage = alertMessage; }
+    public String getSentTo() { return sentTo; }
+    public void setSentTo(String sentTo) { this.sentTo = sentTo; }
+    public LocalDateTime getSentAt() { return sentAt; }
+    public void setSentAt(LocalDateTime sentAt) { this.sentAt = sentAt; }
+    public VisitLog getVisitLog() { return visitLog; }
+    public void setVisitLog(VisitLog visitLog) { this.visitLog = visitLog; }
 }
