@@ -8,14 +8,18 @@ import java.time.LocalDate;
 @Table(name = "appointments")
 @Data
 public class Appointment {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate appointmentDate;
     private String purpose;
-    private String status = "SCHEDULED"; [cite: 67, 70]
+    private String status = "SCHEDULED";
 
-    @ManyToOne @JoinColumn(name = "visitor_id")
+    @ManyToOne
+    @JoinColumn(name = "visitor_id")
     private Visitor visitor;
-    @ManyToOne @JoinColumn(name = "host_id")
-    private Host host; [cite: 73, 74]
+
+    @ManyToOne
+    @JoinColumn(name = "host_id")
+    private Host host;
 }

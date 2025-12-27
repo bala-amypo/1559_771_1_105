@@ -1,34 +1,35 @@
-package com.example.demo.config;
+package com.example.demo.security;
 
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import java.util.Date;
 
-@Configuration
-public class SwaggerConfig {
+@Component
+public class JwtUtil {
+    @Value("${com.example.demo.security.secret}")
+    private String secret;
 
-    @Bean
-    public OpenAPI visitorManagementOpenAPI() {
-        // Define the Security Scheme Name
-        final String securitySchemeName = "bearerAuth"; [cite: 441]
+    @Value("${com.example.demo.security.jwtExpirationMs}")
+    private Long jwtExpirationMs;
 
-        return new OpenAPI()
-                .info(new Info()
-                        .title("Digital Visitor Management API") [cite: 423]
-                        .version("1.0")
-                        .description("API for managing visitors, hosts, and appointments with JWT security.")) [cite: 443]
-                // Apply the security requirement globally to all protected endpoints
-                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName)) [cite: 431]
-                .components(new Components()
-                        .addSecuritySchemes(securitySchemeName,
-                                new SecurityScheme()
-                                        .name(securitySchemeName)
-                                        .type(SecurityScheme.Type.HTTP) [cite: 441]
-                                        .scheme("bearer") [cite: 441]
-                                        .bearerFormat("JWT"))); [cite: 441]
+    public String generateToken(String username, String role, Long userId, String email) {
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("role", role)
+                .claim("userId", userId)
+                .claim("email", email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public Jws<Claims> validateAndGetClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secret.getBytes().length < 32 ? Keys.secretKeyFor(SignatureAlgorithm.HS256) : Keys.hmacShaKeyFor(secret.getBytes()))
+                .build()
+                .parseClaimsJws(token);
     }
 }

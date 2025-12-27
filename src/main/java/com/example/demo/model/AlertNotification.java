@@ -8,15 +8,19 @@ import java.time.LocalDateTime;
 @Table(name = "alert_notifications")
 @Data
 public class AlertNotification {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String alertMessage;
     private String sentTo;
-    private LocalDateTime sentAt; [cite: 102, 103, 104]
+    private LocalDateTime sentAt;
 
-    @OneToOne @JoinColumn(name = "visit_log_id")
-    private VisitLog visitLog; [cite: 101]
+    @OneToOne
+    @JoinColumn(name = "visit_log_id")
+    private VisitLog visitLog;
 
     @PrePersist
-    protected void onCreate() { sentAt = LocalDateTime.now(); } [cite: 107]
+    protected void onCreate() {
+        this.sentAt = LocalDateTime.now();
+    }
 }

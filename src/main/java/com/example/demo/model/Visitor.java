@@ -8,11 +8,12 @@ import java.time.LocalDateTime;
 @Table(name = "visitors")
 @Data
 public class Visitor {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String fullName;
     private String email;
     private String phone;
     private String idProofNumber;
-    private LocalDateTime createdAt = LocalDateTime.now(); [cite: 25, 26, 28, 29, 30]
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
