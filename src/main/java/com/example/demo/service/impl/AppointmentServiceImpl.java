@@ -8,6 +8,7 @@ import com.example.demo.service.AppointmentService;
 import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import com.example.demo.model.VisitLog;
 import java.util.List;
 
 @Service
