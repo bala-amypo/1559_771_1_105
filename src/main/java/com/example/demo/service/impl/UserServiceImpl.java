@@ -1,33 +1,33 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.User;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService; // Ensure this is imported
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service; // Mandatory annotation
 
-@Service
-public class UserServiceImpl {
-    private final UserRepository userRepository; // [cite: 248]
-    private final PasswordEncoder passwordEncoder; // [cite: 248]
+@Service // This tells Spring to create a bean for this class
+public class UserServiceImpl implements UserService { // Must explicitly implement the interface
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
     public User registerUser(User user) {
-        // Enforce default role if null [cite: 125, 249]
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (user.getRole() == null) {
             user.setRole("USER");
         }
-        // Encrypt password before storage [cite: 124, 250]
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
+    @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found")); // [cite: 251]
+        return userRepository.findByEmail(email).orElse(null);
     }
 }
