@@ -1,29 +1,29 @@
 package com.example.demo.security;
 
 import io.jsonwebtoken.*;
-import org.springframework.stereotype.Component;
-
+import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 
-@Component
 public class JwtUtil {
-
-    private String secret = "0123456789ABCDEF0123456789ABCDEF"; // 32 chars
-    private long jwtExpirationMs = 3600000; // 1 hour
+    private String secret; [cite: 362]
+    private Long jwtExpirationMs; [cite: 363]
 
     public String generateToken(String username, String role, Long userId, String email) {
         return Jwts.builder()
+                .setSubject(username)
                 .claim("role", role)
                 .claim("userId", userId)
                 .claim("email", email)
-                .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
+                .compact(); [cite: 365, 369, 370, 371]
     }
 
     public Jws<Claims> validateAndGetClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+        return Jwts.parserBuilder()
+                .setSigningKey(secret.getBytes())
+                .build()
+                .parseClaimsJws(token); [cite: 366]
     }
 }

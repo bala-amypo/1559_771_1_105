@@ -1,42 +1,32 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.User;
-import com.example.demo.service.AuthService;
-import io.swagger.v3.oas.annotations.Operation;
+import com.example.demo.dto.*;
+import com.example.demo.entity.User;
+import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
-@Tag(name = "Authentication", description = "User registration and login")
+@RequestMapping("/auth")
+@Tag(name = "Authentication", description = "User registration and login") // [cite: 434]
 public class AuthController {
+    private final UserService userService;
 
-    private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    public AuthController(UserService userService) {
+        this.userService = userService;
     }
 
-    @Operation(summary = "Register new user")
-    @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        return ResponseEntity.ok(authService.register(user));
+    @PostMapping("/register") // [cite: 257]
+    public ResponseEntity<ApiResponse> register(@RequestBody User user) {
+        User registered = userService.registerUser(user);
+        return new ResponseEntity<>(new ApiResponse(true, "User registered", registered), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Login user and return JWT token")
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request.getUsername(), request.getPassword()));
-    }
-
-    public static class LoginRequest {
-        private String username;
-        private String password;
-
-        public String getUsername() { return username; }
-        public void setUsername(String username) { this.username = username; }
-        public String getPassword() { return password; }
-        public void setPassword(String password) { this.password = password; }
+    @PostMapping("/login") // [cite: 262]
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+        // Logic to authenticate and generate AuthResponse via UserService/JwtUtil
+        return ResponseEntity.ok(new AuthResponse()); 
     }
 }
