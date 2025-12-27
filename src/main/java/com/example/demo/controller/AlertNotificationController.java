@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.AlertNotification;
+import com.example.demo.model.AlertNotification;
 import com.example.demo.service.impl.AlertNotificationServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
