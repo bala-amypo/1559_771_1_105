@@ -1,41 +1,21 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "appointments")
+@Data
 public class Appointment {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    private Visitor visitor;
-
-    @ManyToOne
-    private Host host;
-
     private LocalDate appointmentDate;
     private String purpose;
-    private String status;
+    private String status = "SCHEDULED"; [cite: 67, 70]
 
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Visitor getVisitor() { return visitor; }
-    public void setVisitor(Visitor visitor) { this.visitor = visitor; }
-
-    public Host getHost() { return host; }
-    public void setHost(Host host) { this.host = host; }
-
-    public LocalDate getAppointmentDate() { return appointmentDate; }
-    public void setAppointmentDate(LocalDate appointmentDate) { this.appointmentDate = appointmentDate; }
-
-    public String getPurpose() { return purpose; }
-    public void setPurpose(String purpose) { this.purpose = purpose; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    @ManyToOne @JoinColumn(name = "visitor_id")
+    private Visitor visitor;
+    @ManyToOne @JoinColumn(name = "host_id")
+    private Host host; [cite: 73, 74]
 }

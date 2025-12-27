@@ -1,40 +1,20 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.Visitor;
+import com.example.demo.entity.Visitor;
 import com.example.demo.repository.VisitorRepository;
-import com.example.demo.service.VisitorService;
-import org.springframework.stereotype.Service;
 import java.util.List;
 
-@Service
-public class VisitorServiceImpl implements VisitorService {
-
-    private final VisitorRepository visitorRepository;
+public class VisitorServiceImpl {
+    private final VisitorRepository visitorRepository; [cite: 193]
 
     public VisitorServiceImpl(VisitorRepository visitorRepository) {
-        this.visitorRepository = visitorRepository;
+        this.visitorRepository = visitorRepository; [cite: 192]
     }
 
-    @Override
-    public Visitor createVisitor(Visitor visitor) {
-        return visitorRepository.save(visitor);
-    }
-
-    @Override
+    public Visitor createVisitor(Visitor visitor) { return visitorRepository.save(visitor); } [cite: 188]
+    public List<Visitor> getAllVisitors() { return visitorRepository.findAll(); } [cite: 190]
     public Visitor getVisitor(Long id) {
         return visitorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Visitor not found"));
-    }
-
-    @Override
-    public List<Visitor> getAllVisitors() {
-        return visitorRepository.findAll();
-    }
-
-    @Override
-    public void deleteVisitor(Long id) {
-        Visitor visitor = visitorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Visitor not found"));
-        visitorRepository.delete(visitor);
+            .orElseThrow(() -> new RuntimeException("Visitor not found")); [cite: 194]
     }
 }
