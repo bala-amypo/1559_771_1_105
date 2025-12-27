@@ -1,38 +1,30 @@
-// package com.example.demo.controller;
+package com.example.demo.controller;
 
-// import com.example.demo.model.Host;
-// import com.example.demo.service.HostService;
-// import org.springframework.web.bind.annotation.*;
-// import java.util.List;
+import com.example.demo.entity.Host;
+import com.example.demo.service.impl.HostServiceImpl;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
-// @RestController
-// @RequestMapping("/hosts")
-// public class HostController {
+@RestController
+@RequestMapping("/api/hosts")
+@Tag(name = "Hosts", description = "Host/Employee management")
+public class HostController {
+    private final HostServiceImpl hostService;
 
-//     private final HostService hostService;
+    public HostController(HostServiceImpl hostService) {
+        this.hostService = hostService;
+    }
 
-//     public HostController(HostService hostService) {
-//         this.hostService = hostService;
-//     }
+    @PostMapping
+    public ResponseEntity<Host> create(@RequestBody Host host) {
+        return new ResponseEntity<>(hostService.createHost(host), HttpStatus.CREATED);
+    }
 
-//     @PostMapping
-//     public Host createHost(@RequestBody Host host) {
-//         return hostService.createHost(host);
-//     }
-
-//     @GetMapping("/{id}")
-//     public Host getHost(@PathVariable Long id) {
-//         return hostService.getHost(id);
-//     }
-
-//     @GetMapping
-//     public List<Host> getAllHosts() {
-//         return hostService.getAllHosts();
-//     }
-
-//     @DeleteMapping("/{id}")
-//     public String deleteHost(@PathVariable Long id) {
-//         hostService.deleteHost(id);
-//         return "Host deleted successfully";
-//     }
-// }
+    @GetMapping("/{id}")
+    public ResponseEntity<Host> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(hostService.getHost(id));
+    }
+}
