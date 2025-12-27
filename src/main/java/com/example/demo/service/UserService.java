@@ -1,11 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.model.User;
-import java.util.Optional;
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
 
-public interface UserService {
-
-    User save(User user);
-
-    Optional<User> findById(Long id);
+public interface AuthService {
+    AuthResponse login(AuthRequest request);
 }
