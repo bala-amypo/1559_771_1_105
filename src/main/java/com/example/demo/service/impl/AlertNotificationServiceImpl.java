@@ -1,18 +1,20 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.AlertNotification;
+import com.example.demo.model.VisitLog;
 import com.example.demo.repository.AlertNotificationRepository;
 import com.example.demo.repository.VisitLogRepository;
 import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class AlertNotificationServiceImpl {
     private AlertNotificationRepository alertRepository;
     private VisitLogRepository visitLogRepository;
 
-    // MANDATORY: No-argument constructor for test suite
+    // Required for AuthTests reflection
     public AlertNotificationServiceImpl() {}
 
     public AlertNotificationServiceImpl(AlertNotificationRepository ar, VisitLogRepository vr) {
@@ -35,5 +37,15 @@ public class AlertNotificationServiceImpl {
         alert.setSentAt(LocalDateTime.now());
         
         return alertRepository.save(alert);
+    }
+
+    // Fixed: Added to satisfy AlertNotificationController
+    public AlertNotification getAlert(Long id) {
+        return alertRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Alert not found"));
+    }
+
+    public List<AlertNotification> getAllAlerts() {
+        return alertRepository.findAll();
     }
 }

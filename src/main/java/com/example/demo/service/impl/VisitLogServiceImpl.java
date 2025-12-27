@@ -15,7 +15,7 @@ public class VisitLogServiceImpl {
     private VisitorRepository visitorRepository;
     private HostRepository hostRepository;
 
-    // MANDATORY: No-argument constructor for test suite reflection
+    // Required for AuthTests reflection
     public VisitLogServiceImpl() {}
 
     public VisitLogServiceImpl(VisitLogRepository vr, VisitorRepository vtr, HostRepository hr) {
@@ -24,7 +24,7 @@ public class VisitLogServiceImpl {
         this.hostRepository = hr;
     }
 
-    // MANDATORY: Exact method signature required by AuthTests
+    // Required by AuthTests line 623 and 778
     public VisitLog getVisitLog(long id) {
         return visitLogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("VisitLog not found"));
@@ -32,8 +32,10 @@ public class VisitLogServiceImpl {
 
     public VisitLog checkInVisitor(Long visitorId, Long hostId, String purpose) {
         VisitLog log = new VisitLog();
-        log.setVisitor(visitorRepository.findById(visitorId).orElseThrow(() -> new ResourceNotFoundException("Visitor not found")));
-        log.setHost(hostRepository.findById(hostId).orElseThrow(() -> new ResourceNotFoundException("Host not found")));
+        log.setVisitor(visitorRepository.findById(visitorId)
+            .orElseThrow(() -> new ResourceNotFoundException("Visitor not found")));
+        log.setHost(hostRepository.findById(hostId)
+            .orElseThrow(() -> new ResourceNotFoundException("Host not found")));
         log.setPurpose(purpose);
         log.setCheckInTime(LocalDateTime.now());
         log.setAccessGranted(true);

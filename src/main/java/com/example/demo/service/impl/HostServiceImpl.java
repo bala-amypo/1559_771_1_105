@@ -10,7 +10,7 @@ import java.util.List;
 public class HostServiceImpl {
     private HostRepository hostRepository;
 
-    // MANDATORY: No-argument constructor for test suite
+    // Required for AuthTests reflection
     public HostServiceImpl() {}
 
     public HostServiceImpl(HostRepository hostRepository) {
