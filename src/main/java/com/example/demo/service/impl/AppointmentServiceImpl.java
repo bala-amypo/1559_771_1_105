@@ -1,36 +1,48 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
+import com.example.demo.model.*;
 import com.example.demo.repository.*;
+import com.example.demo.service.AppointmentService;
 import java.time.LocalDate;
 import java.util.List;
 
-public class AppointmentServiceImpl {
-    private final AppointmentRepository appointmentRepository;
-    private final VisitorRepository visitorRepository;
-    private final HostRepository hostRepository; [cite: 214]
+public class AppointmentServiceImpl implements AppointmentService {
+    private AppointmentRepository appointmentRepository;
+    private VisitorRepository visitorRepository;
+    private HostRepository hostRepository;
 
     public AppointmentServiceImpl(AppointmentRepository ar, VisitorRepository vr, HostRepository hr) {
         this.appointmentRepository = ar;
         this.visitorRepository = vr;
-        this.hostRepository = hr; [cite: 213]
+        this.hostRepository = hr;
     }
 
     public Appointment createAppointment(Long visitorId, Long hostId, Appointment appointment) {
         if (appointment.getAppointmentDate().isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("appointmentDate cannot be past"); [cite: 215]
+            throw new IllegalArgumentException("appointmentDate cannot be past");
         }
-        appointment.setVisitor(visitorRepository.findById(visitorId).orElseThrow());
-        appointment.setHost(hostRepository.findById(hostId).orElseThrow());
-        appointment.setStatus("SCHEDULED"); [cite: 216]
+        
+        Visitor v = visitorRepository.findById(visitorId)
+                .orElseThrow(() -> new RuntimeException("Visitor not found"));
+        Host h = hostRepository.findById(hostId)
+                .orElseThrow(() -> new RuntimeException("Host not found"));
+
+        appointment.setVisitor(v);
+        appointment.setHost(h);
+        appointment.setStatus("SCHEDULED");
         return appointmentRepository.save(appointment);
     }
 
     public Appointment getAppointment(Long id) {
         return appointmentRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Appointment not found")); [cite: 217]
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
     }
 
-    public List<Appointment> getAppointmentsForHost(Long hostId) { return appointmentRepository.findByHostId(hostId); } [cite: 210]
-    public List<Appointment> getAppointmentsForVisitor(Long visitorId) { return appointmentRepository.findByVisitorId(visitorId); } [cite: 211]
+    public List<Appointment> getAppointmentsForHost(Long hostId) {
+        return appointmentRepository.findByHostId(hostId);
+    }
+
+    public List<Appointment> getAppointmentsForVisitor(Long visitorId) {
+        return appointmentRepository.findByVisitorId(visitorId);
+    }
 }
