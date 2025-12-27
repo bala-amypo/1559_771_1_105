@@ -1,8 +1,10 @@
-package com.example.demo.service;
+package com.example.demo.repository;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
+import com.example.demo.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
 
-public interface AuthService {
-    AuthResponse login(AuthRequest request);
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email); // [cite: 180]
+    Optional<User> findByUsername(String username); // [cite: 181]
 }
