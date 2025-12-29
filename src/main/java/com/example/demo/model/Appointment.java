@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 @Schema(name = "Appointment", description = "Appointment details between visitor and host")
 @Entity

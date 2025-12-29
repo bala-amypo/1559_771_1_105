@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 @Schema(name = "User", description = "Application user details")
 @Entity
