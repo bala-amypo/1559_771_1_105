@@ -20,24 +20,18 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Digital Visitor Management API")
-                        .description("API for managing visitors, users and appointments")
-                        .version("1.0.0")
+                        .version("1.0")
+                        .description("Swagger documentation for Visitor Management")
                 )
-
-                // 🔐 JWT Security
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new Components()
-
-                        // 🔐 Security Scheme
                         .addSecuritySchemes(securitySchemeName,
                                 new SecurityScheme()
-                                        .name(securitySchemeName)
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")
                         )
-
-                        // 📦 SCHEMAS (THIS FIXES YOUR ERROR)
+                        // 🔑 REQUIRED SCHEMAS
                         .addSchemas("Visitor", new Schema<>().type("object"))
                         .addSchemas("User", new Schema<>().type("object"))
                         .addSchemas("Appointment", new Schema<>().type("object"))
