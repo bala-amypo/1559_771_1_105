@@ -8,11 +8,13 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.media.Schema;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class SwaggerConfig {
 
     @Bean
+    @Primary // Ensures Spring uses this bean when multiple OpenAPI beans exist
     public OpenAPI swaggerOpenAPI() {
 
         final String securitySchemeName = "bearerAuth";
@@ -23,6 +25,7 @@ public class SwaggerConfig {
                         .version("1.0")
                         .description("Swagger documentation for Visitor Management")
                 )
+                // Apply JWT security globally
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new Components()
                         .addSecuritySchemes(securitySchemeName,
@@ -31,7 +34,7 @@ public class SwaggerConfig {
                                         .scheme("bearer")
                                         .bearerFormat("JWT")
                         )
-                        // 🔑 REQUIRED SCHEMAS
+                        // Example schemas for Swagger UI
                         .addSchemas("Visitor", new Schema<>().type("object"))
                         .addSchemas("User", new Schema<>().type("object"))
                         .addSchemas("Appointment", new Schema<>().type("object"))
