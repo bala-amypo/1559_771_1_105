@@ -3,6 +3,7 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Schema(name = "Appointment", description = "Appointment details between visitor and host")
 @Entity
 @Table(name = "appointments")
 public class Appointment {

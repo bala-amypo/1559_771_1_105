@@ -3,6 +3,11 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+
+@Schema(
+        name = "AlertNotification",
+        description = "Alert notification sent for visitor activities"
+)
 @Entity
 @Table(name = "alert_notifications")
 public class AlertNotification {
