@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/visits")
-@Schema(name = "Visit Logs", description = "Check-in and check-out operations") // [cite: 438]
+@Tag(name = "Visit Logs", description = "Check-in and check-out operations") // [cite: 438]
 public class VisitLogController {
     private final VisitLogServiceImpl visitLogService;
 

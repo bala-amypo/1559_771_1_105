@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/visitors")
-@Schema(name = "Visitors", description = "Visitor management endpoints")
+@S(name = "Visitors", description = "Visitor management endpoints")
 public class VisitorController {
 
     private final VisitorServiceImpl visitorService;

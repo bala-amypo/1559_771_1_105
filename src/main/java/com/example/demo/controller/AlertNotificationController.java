@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/alerts")
-@Schema(name = "Alerts", description = "Alert notifications to hosts") // Required tag and description [cite: 439]
+@Tag(name = "Alerts", description = "Alert notifications to hosts") // Required tag and description [cite: 439]
 public class AlertNotificationController {
 
     private final AlertNotificationServiceImpl alertService;
