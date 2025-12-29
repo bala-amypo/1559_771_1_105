@@ -3,6 +3,7 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@Schema(name = "VisitLog", description = "Visitor check-in and check-out log")
 @Entity
 @Table(name = "visit_logs")
 public class VisitLog {

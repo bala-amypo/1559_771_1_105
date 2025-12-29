@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 
+@Schema(name = "Host", description = "Host details")
 @Entity
 @Table(name = "hosts")
 public class Host {
