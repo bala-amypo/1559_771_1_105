@@ -1,9 +1,11 @@
 package com.example.demo.config;
 
 import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.springdoc.core.customizers.OpenApiCustomizer;
+import io.swagger.v3.oas.models.media.Schema;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,22 +13,35 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
     @Bean
-    public OpenApiCustomizer openApiCustomizer() {
+    public OpenAPI swaggerOpenAPI() {
 
-        return openApi -> {
+        final String securitySchemeName = "bearerAuth";
 
-            final String securitySchemeName = "bearerAuth";
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Digital Visitor Management API")
+                        .description("API for managing visitors, users and appointments")
+                        .version("1.0.0")
+                )
 
-            // Add JWT security WITHOUT redefining OpenAPI bean
-            openApi
+                // 🔐 JWT Security
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new Components()
-                    .addSecuritySchemes(securitySchemeName,
-                        new SecurityScheme()
-                            .name(securitySchemeName)
-                            .type(SecurityScheme.Type.HTTP)
-                            .scheme("bearer")
-                            .bearerFormat("JWT")));
-        };
+
+                        // 🔐 Security Scheme
+                        .addSecuritySchemes(securitySchemeName,
+                                new SecurityScheme()
+                                        .name(securitySchemeName)
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")
+                        )
+
+                        // 📦 SCHEMAS (THIS FIXES YOUR ERROR)
+                        .addSchemas("Visitor", new Schema<>().type("object"))
+                        .addSchemas("User", new Schema<>().type("object"))
+                        .addSchemas("Appointment", new Schema<>().type("object"))
+                        .addSchemas("ApiResponse", new Schema<>().type("object"))
+                );
     }
 }
