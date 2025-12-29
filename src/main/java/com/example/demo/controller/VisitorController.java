@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/visitors")
-@S(name = "Visitors", description = "Visitor management endpoints")
+@Tag(name = "Visitors", description = "Visitor management endpoints")
 public class VisitorController {
 
     private final VisitorServiceImpl visitorService;

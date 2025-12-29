@@ -3,6 +3,7 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 
+@Schema(name = "Visitor", description = "Visitor details")
 @Entity
 @Table(name = "visitors")
 public class Visitor {
