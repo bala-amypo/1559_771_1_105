@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/appointments")
-@Tag(name = "Appointments", description = "Appointment scheduling")
+@Schema(name = "Appointments", description = "Appointment scheduling")
 public class AppointmentController {
     private final AppointmentServiceImpl appointmentService;
 

@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/hosts")
-@Tag(name = "Hosts", description = "Host/Employee management")
+@Schema(name = "Hosts", description = "Host/Employee management")
 public class HostController {
     private final HostServiceImpl hostService;
 
